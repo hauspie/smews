@@ -1,23 +1,24 @@
-import Tkinter, tkFileDialog
-import tkMessageBox, tkFileDialog
-import Tix
-import os
-from subprocess import call
-from getpass import getpass
-
-
+from view.interface import interface 
 from model.model import Model
+import Tkinter, tkFileDialog
+import view
+import Tix
+import subprocess
 from model import pathNamesConfig
-from view.interface import interface
 
 
+from subprocess import Popen, PIPE
+from getpass import getpass
+from os import chdir
+import os
+import tkMessageBox, tkFileDialog
 
 class Controleur:
     def __init__(self, root):
         self.model = Model()
         self.model.myModel.addCallback(self.ipChanged)
         self.instConfig=pathNamesConfig.PathAndNames(None)
-        self.interface = interface(root)
+        self.interface=interface(root)
         self.interface.f1.b1.config(command=self.affichageIPV4)
         self.interface.f1.b2.config(command=self.affichageIPV6)
         self.interface.f2.b1.config(command=self.ajouter)
@@ -162,9 +163,9 @@ class Controleur:
         fn = os.path.join(os.path.dirname(__file__), rootpath)
         print fn
         path=fn
-        os.chdir(path) 
+        chdir(path) 
         
-        call('echo |%s' % command,shell=True)
+        subprocess.call('echo |%s' % command,shell=True)
         self.interface.up.configure(state=Tix.NORMAL)
     ##************************fonction qui execute***********************##    
     def upload (self):
@@ -173,7 +174,7 @@ class Controleur:
         fn = os.path.join(os.path.dirname(__file__), rootpath)
         datapath = os.path.join(fn, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        os.chdir(path)
+        chdir(path)
         command="./run.sh &"
         path="chmod +x run.sh"
         os.system('echo | %s' % path)

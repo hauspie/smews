@@ -23,8 +23,8 @@ class Configurer(Frame) :
         self.src=pathparam
         if (pathparam==self.instConfig.apps):
             
-            self.pathconfig=pathparam+"/"+tabApps
-            self.datapath = os.path.join(rootpath, self.pathconfig)
+            self.pathconfig=pathparam
+            self.datapath = os.path.join(rootpath, self.pathconfig,tabApps)
             self.listAppFile=self.p.listdirectory(self.datapath)
             for j in self.listAppFile:
                 self.listFiles.append(j) 
@@ -43,8 +43,9 @@ class Configurer(Frame) :
        
         self.frameLabelFrames=Frame(self)
         self.frameLabelFrames.grid(column=0,row=0)
+         
        
-        
+            
         self.initialize()
     
 
@@ -55,157 +56,188 @@ class Configurer(Frame) :
         self.valTot=[]
         self.namesTot=[]
         self.nameWidgets=[]
-        for li in self.listFiles:
-            
-            self.list=self.p.extractPropsFromXml(li)
-           
-            self.f=LabelFrame( self.frameLabelFrames,bg='#eeeeee',label=self.p.getLabelGroup(),labelside=ACROSSTOP, padx=5, pady=5 )
-            self.frame=Frame(self.f, bd=2)
-            self.frame=self.f.frame
-            
-            self.frame2=Frame(self.frame, bd=2)
-            cpt=0
-            self.listeName=[]
-            self.listeWid=[]
-            self.val=[]
-            self.c=0
-            self.index=0
-            bool=False;
-            bool2=False;
-            self.value=StringVar()
-            self.varButton=[]
-            if(len(self.list)>0):
-                self.exist=True
-            for i in range(len(self.list)):
-                self.keys=self.p.getKeys()[cpt]
-                self.values=self.p.getValues()[cpt]
-                print self.values
-                k=0
-                while(k<((len(self.p.getKeys()[cpt])))):  
-                        
-                    if (self.values[0][0]=='arg') and not(self.values[1][0]=="Checkbutton") and not (self.values[1][0]=="Radiobutton")  :  
-                        if (bool2==False):
-                            self.row+=1
-    
-                        bool2=True
-                        self.column=0
-                        if (self.keys[k]=='name'):
-                            self.column=0;
-                            self.name=self.values[1][k]
-                            self.label(self.name)
-                            self.listeName.append(self.name)
-                        elif (self.keys[k]=='show'):
-                            self.column+=1;
-                            self.c=self.c+1
-                            data=self.values[1][k]
-                            print data
-                            self.wid=self.show(data)
-                            self.listeWid.append(data)
-
-                        elif (self.keys[k]=='Value'):
-                            valeur = StringVar()
-                        elif (self.keys[k]=='to'):
-                            self.wid.config(to=self.values[1][k])
-                        elif (self.keys[k]=='from'):
-                            self.wid.config(from_=self.values[1][k]) 
-                        elif (self.keys[k]=='orient'):
-                            self.wid.config(orient=self.values[1][k]) 
-                        elif (self.keys[k]== "resolution"):
-                            self.wid.config(resolution=self.values[1][k]) 
-                        elif (self.keys[k]== "tickinterval"):
-                            self.wid.config(tickinterval=self.values[1][k])
-                        elif (self.keys[k]== "length"):
-                            self.wid.config(length=self.values[1][k])
-                    if (self.values[0][0]=='select'):
-                        pass
-                    if (self.keys[k]=='state'):
-                            self.wid.entry.config(state=self.values[1][k])
-                    elif (self.values[0][0]=='option'):
-                        if (self.keys[k]=='Value'):
-                            self.wid.insert(END,self.values[1][k])
-                        if (self.keys[k]=='selected'):
-                            self.val[-1].set(self.values[1][k+1])
-    
-                    elif (self.values[0][0]=='arg') and ((self.values[1][0]=="Checkbutton") or (self.values[1][0]=="Radiobutton")  ) :
-                        self.frame2=Frame(self.frame, bd=2)
-                        self.value=StringVar()
-                        bool=True;
-                        self.column=0
-                        self.row+=1
-                        data=""
-                    if (self.keys[k]=='name'):
-                            self.column=0
-                            name=self.values[1][k]
-                            self.label(name)
-                            self.listeName.append(name)
-                            
-                    if (self.values[0][0]=='input'):
-    
-                        if (self.keys[k]=='show'):
-                            self.c=self.c+1
-                            self.column+=1;
-                            data=self.values[1][k]
-                            print data
-                            bool=True;
-                            self.wid=self.show(data)
-                            self.listeWid.append(data)
-                            if(not(self.value in self.varButton)):
-                                self.varButton.append(self.value)
-                                self.val.append(self.value)
-                                self.nameWidgets.append(data)
-    
-                        if (self.keys[k]=='Value'):
-                            valeur = StringVar()
-                            self.wid.config(variable=self.value)
-                            if (data=="Checkbutton"):
-                                self.wid.config(onvalue=self.values[1][k])
-                            else:
-                                self.wid.config(value=self.values[1][k])
-                            print self.values[1][k]
-                            def wid():
-                                pass
-                            self.wid.config(command=wid)
-                        if (self.keys[k]=='text'):
-                            
-                            name=self.values[1][k]
-                            self.wid.config(text=name)
-                            
-                        if (self.keys[k]=='selected'):
-                            self.wid.select()
-                        else:
-                            self.wid.deselect()
-                    
-                        
-                    k=k+1
-                cpt=cpt+1
-                
-                if (bool2==True): 
-                    self.row+=1
-                    self.column=0
-                    bool2=False
-                else :
-                    
-                    self.frame2.pack(fill=BOTH,  side=TOP, anchor=W, expand=YES)
-                    self.frame2.grid(row=self.row, column=1,sticky='W')
-    
-            if(len(self.list)>0):
-                
-                self.listOfFiles.append(li)
-                self.f.pack()
-                self.f.grid(row=cptInsert, column=0,sticky='W')
-                cptInsert+=1
-                self.valTot.append(self.val)
-                self.namesTot.append(self.listeName)
-            try:
-                for index in range(len(self.nub(self.listeName))):
-                    self.val[index].set(self.getDefaultValue(li, "#define "+ self.nub(self.listeName)[index]))
-            except:
-                self.parent.destroy()
-                try:
-                    tkMessageBox.showerror("error"," no default value")
-                except TclError:
-                    print 
         
+        for li in self.listFiles:
+            self.list=self.p.extractPropsFromXml(li)
+            n=0
+            for label in self.p.getLabelGroup():
+                if(len(self.p.getLabelGroup())>1):
+                
+                    l=self.p.getValues()
+                    l1=self.p.getKeys()
+                    print "l",l,li
+                    print "l1",l1
+                    print "aa",self.p.getLesCles()[1]
+                    print "aa",self.p.getLesVals()[1]
+                    print "ppp",self.p.getTab()
+
+                self.f=LabelFrame( self.frameLabelFrames,bg='#eeeeee',label=label,labelside=ACROSSTOP, padx=5, pady=5 )
+                self.frame=Frame(self.f, bd=2)
+                self.frame=self.f.frame
+                
+                self.frame2=Frame(self.frame, bd=2)
+                cpt=0
+                self.listeName=[]
+                self.listeWid=[]
+                self.val=[]
+                self.c=0
+                self.index=0
+                bool=False;
+                bool2=False;
+                self.value=StringVar()
+                self.varButton=[]
+
+                if(len(self.list)>0):
+                    self.exist=True
+                "for i in range(len(self.list)):"
+
+
+                for i in range(len(self.p.getTab()[n])):
+
+
+                    """self.keys=self.p.getKeys()[cpt]
+                    self.values=self.p.getValues()[cpt]"""
+                    if(len(self.p.getLabelGroup())>1):
+
+                        self.keys=self.p.getLesCles()[n][cpt]
+                        self.values=self.p.getLesVals()[n][cpt]
+                        print "mmmmmmmmmmmmmmmmmm",self.values
+                        print "nnnnnnnn",self.keys
+
+                    else:
+                        self.keys=self.p.getKeys()[cpt]
+                        self.values=self.p.getValues()[cpt]
+                        
+
+                    k=0
+                    while(k<(len(self.keys))):  
+                            
+                        if (self.values[0][0]=='arg') and not(self.values[1][0]=="Checkbutton") and not (self.values[1][0]=="Radiobutton")  :  
+                            if (bool2==False):
+                                self.row+=1
+        
+                            bool2=True
+                            self.column=0
+                            if (self.keys[k]=='name'):
+                                self.column=0;
+                                self.name=self.values[1][k]
+                                self.label(self.name)
+                                self.listeName.append(self.name)
+                            elif (self.keys[k]=='show'):
+                                self.column+=1;
+                                self.c=self.c+1
+                                data=self.values[1][k]
+                                print data
+                                self.wid=self.show(data)
+                                self.listeWid.append(data)
+    
+                            elif (self.keys[k]=='Value'):
+                                valeur = StringVar()
+                            elif (self.keys[k]=='to'):
+                                self.wid.config(to=self.values[1][k])
+                            elif (self.keys[k]=='from'):
+                                self.wid.config(from_=self.values[1][k]) 
+                            elif (self.keys[k]=='orient'):
+                                self.wid.config(orient=self.values[1][k]) 
+                            elif (self.keys[k]== "resolution"):
+                                self.wid.config(resolution=self.values[1][k]) 
+                            elif (self.keys[k]== "tickinterval"):
+                                self.wid.config(tickinterval=self.values[1][k])
+                            elif (self.keys[k]== "length"):
+                                self.wid.config(length=self.values[1][k])
+                        if (self.values[0][0]=='select'):
+                            pass
+                        if (self.keys[k]=='state'):
+                                self.wid.entry.config(state=self.values[1][k])
+                        elif (self.values[0][0]=='option'):
+                            if (self.keys[k]=='Value'):
+                                print "oooooooooooooooooooooooooooo",self.values[1][k]
+                                self.wid.insert(END,self.values[1][k])
+                            """if (self.keys[k]=='selected'):
+                                self.val[-1].set(self.values[1][k+1])"""
+        
+                        elif (self.values[0][0]=='arg') and ((self.values[1][0]=="Checkbutton") or (self.values[1][0]=="Radiobutton")  ) :
+                            self.frame2=Frame(self.frame, bd=2)
+                            self.value=StringVar()
+                            bool=True;
+                            self.column=0
+                            self.row+=1
+                            data=""
+                        if (self.keys[k]=='name'):
+                                self.column=0
+                                name=self.values[1][k]
+                                self.label(name)
+                                self.listeName.append(name)
+                                
+                        if (self.values[0][0]=='input'):
+        
+                            if (self.keys[k]=='show'):
+                                self.c=self.c+1
+                                self.column+=1;
+                                data=self.values[1][k]
+                                print data
+                                bool=True;
+                                self.wid=self.show(data)
+                                self.listeWid.append(data)
+                                if(not(self.value in self.varButton)):
+                                    self.varButton.append(self.value)
+                                    self.val.append(self.value)
+                                    self.nameWidgets.append(data)
+        
+                            if (self.keys[k]=='Value'):
+                                valeur = StringVar()
+                                self.wid.config(variable=self.value)
+                                if (data=="Checkbutton"):
+                                    self.wid.config(onvalue=self.values[1][k])
+                                else:
+                                    self.wid.config(value=self.values[1][k])
+                                print self.values[1][k]
+                                def wid():
+                                    pass
+                                self.wid.config(command=wid)
+                            if (self.keys[k]=='text'):
+                                
+                                name=self.values[1][k]
+                                self.wid.config(text=name)
+                                
+                            if (self.keys[k]=='selected'):
+                                self.wid.select()
+                            else:
+                                self.wid.deselect()
+                        
+                            
+                        k=k+1
+                    cpt=cpt+1
+                    
+                    if (bool2==True): 
+                        self.row+=1
+                        self.column=0
+                        bool2=False
+                    else :
+                        
+                        self.frame2.pack(fill=BOTH,  side=TOP, anchor=W, expand=YES)
+                        self.frame2.grid(row=self.row, column=1,sticky='W')
+        
+                "if(len(self.list)>0):"
+                if(len(self.p.getTab()[n])>0):
+
+                    
+                    self.listOfFiles.append(li)
+                    self.f.pack()
+                    self.f.grid(row=cptInsert, column=0,sticky='W')
+                    cptInsert+=1
+                    self.valTot.append(self.val)
+                    self.namesTot.append(self.listeName)
+                try:
+                    for index in range(len(self.nub(self.listeName))):
+                        self.val[index].set(self.getDefaultValue(li, "#define "+ self.nub(self.listeName)[index]))
+                except:
+                    self.parent.destroy()
+                    try:
+                        tkMessageBox.showerror("error"," no default value")
+                    except TclError:
+                        print 
+                n+=1
         vbar=Scrollbar(self,orient=VERTICAL)
         vbar.pack(side=RIGHT,fill=Y)
         vbar.config(command=self.ScrolledCanvas.yview)
@@ -256,6 +288,7 @@ class Configurer(Frame) :
                 self.replaceAll(fichier, val1, val2)
                 cpt=cpt+1
             r+=1
+        self.parent.destroy()
         
             
             

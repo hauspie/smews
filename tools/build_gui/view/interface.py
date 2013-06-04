@@ -77,7 +77,6 @@ class interface(Tix.Tk):
         self.lesParams.append(self.f1.getTargetParams())
         
         self.lesParams.append(self.f2.getAppsParams())
-        print "ddddddd",self.f2.getAppsParams()
         self.lesParams.append(self.f3.getOptionsParam())
         for c in self.lesParams:
             for i in c :                    

@@ -12,7 +12,6 @@ import Image
 import ImageTk
 
 
-from controleur.controleur import Controleur
 
 import string
 from model import pathNamesConfig
@@ -24,9 +23,9 @@ class targetUI(Tix.Frame):
     def __init__(self,parent):
         Tix.Frame.__init__(self,parent)
         self.parent=parent
-        
-        self.initialize()
         self.instConfig=pathNamesConfig.PathAndNames(None)
+
+        self.initialize()
 
         
         
@@ -47,11 +46,11 @@ class targetUI(Tix.Frame):
         self.exist=False
         self.bool=False
         self.ok=False
-        self.sconsParamTarget=[["ipaddr",""],["target",""]]
+        self.sconsParamTarget=[["ipaddr","192.168.1.2"],["target",""]]
         dir_path = os.path.dirname(os.path.abspath(__file__))
         print(dir_path)
-        rootpath = "../../../../.."
-        relatifpath= 'targets'
+        rootpath = self.instConfig.rootPath
+        relatifpath= self.instConfig.target
         fn = os.path.join(os.path.dirname(__file__), rootpath)
         datapath = os.path.join(rootpath, relatifpath)
         print(datapath)
@@ -290,10 +289,8 @@ class targetUI(Tix.Frame):
             
             im = Image.open(datapath) 
             data = list(im.getdata())
-            ## Reconstruction de l'image
             imNew=Image.new(im.mode ,im.size) 
             imNew.putdata(data)
-            print "size newimg",im.size 
             self.photo = ImageTk.PhotoImage(imNew)
             self.canvas.delete(tk.ALL)
             self.canvas.create_image(70,70,image=self.photo)

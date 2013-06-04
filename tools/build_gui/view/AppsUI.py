@@ -18,7 +18,7 @@ class AppsUI(Tix.Frame):
         self.parent=parent
         self.taregtInst=target
         self.instConfig=pathNamesConfig.PathAndNames(None)
-
+        self.cpt=0
         self.initialize()
           
     def initialize (self):
@@ -55,10 +55,14 @@ class AppsUI(Tix.Frame):
         x = self.tree.get_children() 
         for item in x: 
             self.tree.delete(item)
-        for a in self.mesApps:
-            id=self.tree.insert('', 'end', text=a)
+        
+        
+        for a in self.listApps:
+            self.cpt=self.cpt+1
+            self.id=self.tree.insert('', 'end', text=a)
             u="http://%s/%s"% (self.url,a)
-            self.tree.set(id, "URL",u)
+            self.tree.set(self.id, "URL",u)
+        
         
     def getAppIp (self):
         return self.url
@@ -70,12 +74,11 @@ class AppsUI(Tix.Frame):
     
     def supprimer (self):
         try:
-            rows=self.tree.selection(selop=None, items=None);
+            rows=self.tree.selection(selop=None, items=None)
             j=rows[0][3:]
             self.i=self.i-1
             s=int(j)
-            
-            v=self.mymodel[s-1]
+            v=self.mymodel[s-1-self.cpt]
             self.listApps.remove(v)
             if(len(self.listApps)==0):
                 self.b3.configure(state=Tix.DISABLED)
@@ -92,11 +95,8 @@ class AppsUI(Tix.Frame):
         fenetre=tk.Toplevel()
         rows=self.tree.selection(selop=None, items=None);
         j=rows[0][3:]
-        self.i=self.i-1
         s=int(j)
-            
-        v=self.mymodel[s-1]
-        print "les appssssss ",self.listApps
+        v=self.mymodel[s-1-self.cpt]
         app=view.Configuration.Configurer(fenetre,"apps",v)
         fenetre.title("Application Configuration")
       
