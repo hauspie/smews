@@ -24,6 +24,7 @@ class Controleur:
         self.interface.f2.b1.config(command=self.ajouter)
         self.interface.build.config(command=self.build)
         self.interface.up.config(command=self.upload)
+        self.interface.kill.config(command=self.kill)
         self.interface.f1.frameipv4.E4.bind("<Return>",self.OnPressEnter)
 
         self.ipChanged(self.model.myModel.get())
@@ -164,11 +165,20 @@ class Controleur:
         self.interface.up.configure(state=Tix.NORMAL)
     ##************************fonction qui execute***********************##    
     def upload (self):
+        self.build()
         rootpath =self.instConfig.rootPath     
         relatifpath= self.instConfig.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
         command = os.path.join(path, "run.sh &")
+        os.system(command)
+
+    def kill(self):
+        rootpath =self.instConfig.rootPath     
+        relatifpath= self.instConfig.target
+        datapath = os.path.join(rootpath, relatifpath)
+        path= os.path.join(datapath,self.interface.f1.getTarget())
+        command = os.path.join(path, "kill.sh &")
         os.system(command)
         
 

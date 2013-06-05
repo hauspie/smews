@@ -62,10 +62,12 @@ class interface(Tix.Tk):
         self.framePrincipale.grid(row=0, column=0,sticky='W')
         
         frame=Tix.Frame(self, bd=2)
-        self.build=Tix.Button(frame, text="build",font=("Helvetica", 12))
+        self.build=Tix.Button(frame, text="build")
         self.build.grid(row=4, column=0, sticky='W')
-        self.up=Tix.Button(frame,state=DISABLED, text="upload", font=("Helvetica", 12))
-        self.up.grid(row=4, column=1, sticky='W', padx=5, pady=5)
+        self.up=Tix.Button(frame, text="program and run")
+        self.up.grid(row=4, column=1, sticky='W')
+        self.kill=Tix.Button(frame, text="kill")
+        self.kill.grid(row=4, column=2, sticky='W')
         
 #        frame.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
         frame.grid(row=4, column=0,sticky='W', padx=5, pady=5)
