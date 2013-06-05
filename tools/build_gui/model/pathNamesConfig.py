@@ -10,6 +10,7 @@ class PathAndNames:
         print(self.rootPath)
         self.apps = "apps"
         self.target="targets"
-        self.script="run.sh"
+        self.run_script="run.sh"
+        self.kill_script="kill.sh"
         self.image="target.jpg"
         self.description="README"

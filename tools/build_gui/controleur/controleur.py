@@ -170,15 +170,17 @@ class Controleur:
         relatifpath= self.instConfig.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        command = os.path.join(path, "run.sh &")
-        os.system(command)
+        cmd = self.instConfig.run_script + " -gui"
+        command = os.path.join(path, cmd)
+        print(os.system(command))
 
     def kill(self):
         rootpath =self.instConfig.rootPath     
         relatifpath= self.instConfig.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        command = os.path.join(path, "kill.sh &")
-        os.system(command)
+        cmd = self.instConfig.kill_script + " -gui"
+        command = os.path.join(path, cmd)
+        print(os.system(command))
         
 
