@@ -158,27 +158,17 @@ class Controleur:
         command="scons "+self.interface.cmd #linux
         
         print command     
-        rootpath = "../../../../../.."
-        relatifpath= 'smews-master'
-        fn = os.path.join(os.path.dirname(__file__), rootpath)
-        print fn
-        path=fn
-        chdir(path) 
+        chdir(self.instConfig.rootPath)
         
         subprocess.call('echo |%s' % command,shell=True)
         self.interface.up.configure(state=Tix.NORMAL)
     ##************************fonction qui execute***********************##    
     def upload (self):
-        rootpath = "../../../../../.."
-        relatifpath= 'targets'
-        fn = os.path.join(os.path.dirname(__file__), rootpath)
-        datapath = os.path.join(fn, relatifpath)
+        rootpath =self.instConfig.rootPath     
+        relatifpath= self.instConfig.target
+        datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        chdir(path)
-        command="./run.sh &"
-        path="chmod +x run.sh"
-        os.system('echo | %s' % path)
-        self.interface.quit()
-        os.system('echo |gksudo -w  %s' % command)
+        command = os.path.join(path, "run.sh &")
+        os.system(command)
         
 

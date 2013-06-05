@@ -93,17 +93,18 @@ class targetUI(Tix.Frame):
         self.cpt_profil=0
         
         
-        self.comboTarget.pack(side=Tix.LEFT)
+#        self.comboTarget.pack(side=Tix.LEFT)
         self.comboTarget.grid(row=2, column=2)
         target=Tix.Label(self.frameTarget, text='target:')
+#        target.pack(side=Tix.LEFT)
         target.grid(column=1, row=2,sticky='W')
         
-        self.comboTarget.pack(side=Tix.LEFT)
-        self.comboTarget.grid(row=2, column=2)
-        self.frameTarget.pack(side=Tix.LEFT)
+#        self.comboTarget.pack(side=Tix.LEFT)
+#        self.comboTarget.grid(row=2, column=2)
+#        self.frameTarget.pack(side=Tix.LEFT)
         self.frameTarget.grid(row=2, column=2)
         
-        self.frameProfil.pack(side=Tix.LEFT)
+ #       self.frameProfil.pack(side=Tix.LEFT)
         self.frameProfil.grid(row=2, column=3)
         self.frameCombo.grid(row=2, column=1, sticky='W')
         self.lesProfils=[]
@@ -177,7 +178,7 @@ class targetUI(Tix.Frame):
                     self.profil=Tix.Label(self.frameProfil, text='profil:')
                     self.profil.grid(column=6, row=2,sticky='W')
                     self.comboProfil.entry.config(state='readonly')
-                    self.comboProfil.pack(side=Tix.LEFT)
+#                    self.comboProfil.pack(side=Tix.LEFT)
                     self.comboProfil.grid(row=2, column=7)
                     self.bool=True
                     self.ok=True
@@ -187,7 +188,7 @@ class targetUI(Tix.Frame):
         if self.bool==False:
             self.frameProfil.destroy()
             self.frameProfil=Tix.Frame(self.frameCombo, bd=2)
-            self.frameProfil.pack(side=Tix.LEFT)
+ #           self.frameProfil.pack(side=Tix.LEFT)
             self.frameProfil.grid(row=2, column=3)
             self.ok=False
         

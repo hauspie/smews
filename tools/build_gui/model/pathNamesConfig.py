@@ -6,7 +6,7 @@ Created on May 28, 2013
 import os
 class PathAndNames:
     def __init__(self, root):
-        self.rootPath=os.path.join("..","..")
+        self.rootPath=os.path.abspath(os.path.join("..",".."))
         self.apps = "apps"
         self.target="targets"
         self.script="run.sh"

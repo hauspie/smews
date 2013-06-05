@@ -67,7 +67,7 @@ class interface(Tix.Tk):
         self.up=Tix.Button(frame,state=DISABLED, text="upload", font=("Helvetica", 12))
         self.up.grid(row=4, column=1, sticky='W', padx=5, pady=5)
         
-        frame.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
+#        frame.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
         frame.grid(row=4, column=0,sticky='W', padx=5, pady=5)
         self.geometry('770x400')
 

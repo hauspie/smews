@@ -42,7 +42,7 @@ class Configurer(Frame) :
         self.ScrolledCanvas=Canvas(self,width=250,height=250, highlightthickness=0)
        
         self.frameLabelFrames=Frame(self)
-        self.frameLabelFrames.grid(column=0,row=0)
+        self.frameLabelFrames.pack()
          
        
             
@@ -216,7 +216,7 @@ class Configurer(Frame) :
                     else :
                         
                         self.frame2.pack(fill=BOTH,  side=TOP, anchor=W, expand=YES)
-                        self.frame2.grid(row=self.row, column=1,sticky='W')
+#                        self.frame2.grid(row=self.row, column=1,sticky='W')
         
                 "if(len(self.list)>0):"
                 if(len(self.p.getTab()[n])>0):

@@ -99,11 +99,11 @@ class OptionsUI(Tix.Frame):
         self.checkSum.grid(column=9,row=5)   
 
 
-        self.frame1.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
+#        self.frame1.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
         self.frame1.grid(row=2, column=0,sticky='W')
-        self.frame2.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
+#        self.frame2.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
         self.frame2.grid(row=4, column=0,sticky='W')
-        self.frame3.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
+#        self.frame3.pack(fill=Tix.BOTH,  side=TOP, anchor=W, expand=YES)
         self.frame3.grid(row=6, column=0,sticky='W')
         
         
