@@ -1,2 +1,4 @@
 #!/bin/bash
-gksudo pkill smews.elf &
+SUDO=sudo
+test "$1" = "-gui" && SUDO=gksudo
+$SUDO pkill smews.elf &
