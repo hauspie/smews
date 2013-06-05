@@ -1,3 +1,4 @@
+#!/usr/bin/python2
 import Tkinter as tk
 from controleur.controleur import Controleur
  

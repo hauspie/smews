@@ -158,21 +158,26 @@ class Controleur:
         """command="C:\Python27\Scripts\scons "+self.interface.cmd""" #windows
         command="scons "+self.interface.cmd #linux
         
-        print command     
         chdir(self.instConfig.rootPath)
+        ret = os.system(command)
+        if ret != 0:
+            tkMessageBox.showwarning("error", "Failed to build: {0} returned {1}".format(command, ret))
+            return False
+        return True
         
-        subprocess.call('echo |%s' % command,shell=True)
-        self.interface.up.configure(state=Tix.NORMAL)
     ##************************fonction qui execute***********************##    
     def upload (self):
-        self.build()
+        if not self.build():
+            return False
         rootpath =self.instConfig.rootPath     
         relatifpath= self.instConfig.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
         cmd = self.instConfig.run_script + " -gui"
         command = os.path.join(path, cmd)
-        print(os.system(command))
+        ret = os.system(command)
+        if ret != 0:
+            tkMessageBox.showwarning("error", "Failed to program: {0} returned {1}".format(command, ret))
 
     def kill(self):
         rootpath =self.instConfig.rootPath     
@@ -181,6 +186,8 @@ class Controleur:
         path= os.path.join(datapath,self.interface.f1.getTarget())
         cmd = self.instConfig.kill_script + " -gui"
         command = os.path.join(path, cmd)
-        print(os.system(command))
+        ret = os.system(command)
+        if ret != 0:
+            tkMessageBox.showwarning("error", "Failed to kill: {0} returned {1}".format(command, ret))
         
 
