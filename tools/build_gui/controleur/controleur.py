@@ -139,7 +139,7 @@ class Controleur:
             self.interface.f2.listApps.remove("")
         self.interface.f2.sconsParamApps=""
         self.interface.f2.mesApps=[]
-        self.interface.f2.sconsParamApps= self.interface.f2.sconsParamApps +":welcome"
+#        self.interface.f2.sconsParamApps= self.interface.f2.sconsParamApps +":welcome"
         print "slistapps",self.interface.f2.listApps
        
      
@@ -155,7 +155,6 @@ class Controleur:
             self.interface.f2.mesApps.append(a)
         
         self.validateTargetParam()
-        """command="C:\Python27\Scripts\scons "+self.interface.cmd""" #windows
         command="scons "+self.interface.cmd #linux
         
         chdir(self.instConfig.rootPath)
@@ -169,6 +168,8 @@ class Controleur:
     def upload (self):
         if not self.build():
             return False
+        if not self.kill():
+            return False
         rootpath =self.instConfig.rootPath     
         relatifpath= self.instConfig.target
         datapath = os.path.join(rootpath, relatifpath)
@@ -178,6 +179,8 @@ class Controleur:
         ret = os.system(command)
         if ret != 0:
             tkMessageBox.showwarning("error", "Failed to program: {0} returned {1}".format(command, ret))
+            return False
+        return True
 
     def kill(self):
         rootpath =self.instConfig.rootPath     
@@ -189,5 +192,7 @@ class Controleur:
         ret = os.system(command)
         if ret != 0:
             tkMessageBox.showwarning("error", "Failed to kill: {0} returned {1}".format(command, ret))
+            return False
+        return True
         
 
