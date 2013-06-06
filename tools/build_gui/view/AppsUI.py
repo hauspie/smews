@@ -10,14 +10,13 @@ import view
 import Tkinter as tk
 from view import Configuration 
 from view.Configuration import Configurer
-from model import pathNamesConfig
+from model.pathNamesConfig import PathAndNames
 
 class AppsUI(Tix.Frame):
     def __init__(self,parent,target):
         Tix.Frame.__init__(self,parent)
         self.parent=parent
         self.taregtInst=target
-        self.instConfig=pathNamesConfig.PathAndNames(None)
         self.cpt=0
         self.initialize()
           

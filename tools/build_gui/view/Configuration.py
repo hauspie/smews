@@ -7,21 +7,20 @@ from Tix import *
 import view 
 import fileinput
 import tkMessageBox, tkFileDialog
-from model import pathNamesConfig
+from model.pathNamesConfig import PathAndNames
 
 class Configurer(Frame) :
     def __init__(self,parent,pathparam,tabApps):
         Frame.__init__(self,parent)
-        self.instConfig=pathNamesConfig.PathAndNames(None)
 
         self.exist=False
         self.parent=parent
         self.p=SimpleParser.Parser()
         self.liste=[]
         self.listFiles=[]
-        rootpath = self.instConfig.rootPath
+        rootpath = PathAndNames.rootPath
         self.src=pathparam
-        if (pathparam==self.instConfig.apps):
+        if (pathparam==PathAndNames.apps):
             
             self.pathconfig=pathparam
             self.datapath = os.path.join(rootpath, self.pathconfig,tabApps)

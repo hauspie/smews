@@ -5,11 +5,10 @@ Created on May 28, 2013
 '''
 import os
 class PathAndNames:
-    def __init__(self, root):
-        self.rootPath=os.path.abspath(os.path.join(os.path.dirname(__file__),"..","..",".."))
-        self.apps = "apps"
-        self.target="targets"
-        self.run_script="run.sh"
-        self.kill_script="kill.sh"
-        self.image="target.jpg"
-        self.description="README"
+    rootPath=os.path.abspath(os.path.join(os.path.dirname(__file__),"..","..",".."))
+    apps = "apps"
+    target="targets"
+    run_script="run.sh"
+    kill_script="kill.sh"
+    image="target.jpg"
+    description="README"

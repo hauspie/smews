@@ -4,7 +4,7 @@ import Tkinter, tkFileDialog
 import view
 import Tix
 import subprocess
-from model import pathNamesConfig
+from model.pathNamesConfig import PathAndNames
 
 
 from subprocess import Popen, PIPE
@@ -17,7 +17,6 @@ class Controleur:
     def __init__(self, root):
         self.model = Model()
         self.model.myModel.addCallback(self.ipChanged)
-        self.instConfig=pathNamesConfig.PathAndNames(None)
         self.interface=interface(root)
         self.interface.f1.b1.config(command=self.affichageIPV4)
         self.interface.f1.b2.config(command=self.affichageIPV6)
@@ -108,7 +107,7 @@ class Controleur:
         
     def ajouter(self):
 
-        rootpath =self.instConfig.rootPath     
+        rootpath =PathAndNames.rootPath     
         self.datapath = os.path.join(rootpath, "apps/")
        
 
@@ -150,7 +149,7 @@ class Controleur:
         self.validateTargetParam()
         command="scons "+self.interface.cmd #linux
         
-        chdir(self.instConfig.rootPath)
+        chdir(PathAndNames.rootPath)
         ret = os.system(command)
         if ret != 0:
             tkMessageBox.showwarning("error", "Failed to build: {0} returned {1}".format(command, ret))
@@ -163,11 +162,11 @@ class Controleur:
             return False
         if not self.kill():
             return False
-        rootpath =self.instConfig.rootPath     
-        relatifpath= self.instConfig.target
+        rootpath =PathAndNames.rootPath     
+        relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        cmd = self.instConfig.run_script + " -gui"
+        cmd = PathAndNames.run_script + " -gui"
         command = os.path.join(path, cmd)
         ret = os.system(command)
         if ret != 0:
@@ -176,11 +175,11 @@ class Controleur:
         return True
 
     def kill(self):
-        rootpath =self.instConfig.rootPath     
-        relatifpath= self.instConfig.target
+        rootpath =PathAndNames.rootPath     
+        relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
         path= os.path.join(datapath,self.interface.f1.getTarget())
-        cmd = self.instConfig.kill_script + " -gui"
+        cmd = PathAndNames.kill_script + " -gui"
         command = os.path.join(path, cmd)
         ret = os.system(command)
         if ret != 0:

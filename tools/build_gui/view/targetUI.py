@@ -14,7 +14,7 @@ import ImageTk
 
 
 import string
-from model import pathNamesConfig
+from model.pathNamesConfig import PathAndNames
 
 import view 
 
@@ -23,8 +23,6 @@ class targetUI(Tix.Frame):
     def __init__(self,parent):
         Tix.Frame.__init__(self,parent)
         self.parent=parent
-        self.instConfig=pathNamesConfig.PathAndNames(None)
-
         self.initialize()
 
         
@@ -47,8 +45,8 @@ class targetUI(Tix.Frame):
         self.bool=False
         self.ok=False
         self.sconsParamTarget=[["ipaddr","192.168.1.2"],["target",""]]
-        rootpath = self.instConfig.rootPath
-        relatifpath= self.instConfig.target
+        rootpath = PathAndNames.rootPath
+        relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
         self.listeDesTargets=self.listdirectory(datapath)
         self.varcombo = Tix.StringVar()
@@ -196,7 +194,7 @@ class targetUI(Tix.Frame):
    
     def config(self):
         fenetre=tk.Toplevel()
-        self.targetpath=self.instConfig.target+"/"+self.leTarget
+        self.targetpath=PathAndNames.target+"/"+self.leTarget
         view.Configuration.Configurer(fenetre,self.targetpath,None)
         """fenetre.geometry('400x300')
         fenetre.resizable(width=False, height=False)"""
@@ -273,8 +271,8 @@ class targetUI(Tix.Frame):
      
     def displayTargetPicture(self,targetname):
         try:
-            rootpath = self.instConfig.rootPath 
-            datapath = os.path.join(rootpath,self.instConfig.target,targetname,self.instConfig.image)
+            rootpath = PathAndNames.rootPath 
+            datapath = os.path.join(rootpath,PathAndNames.target,targetname,PathAndNames.image)
             
             
             im = Image.open(datapath) 
@@ -293,8 +291,8 @@ class targetUI(Tix.Frame):
               
     def displayTargetDescription(self,targetname): 
         try:   
-            rootpath = self.instConfig.rootPath 
-            datapath = os.path.join(rootpath,self.instConfig.target,targetname,self.instConfig.description)
+            rootpath = PathAndNames.rootPath 
+            datapath = os.path.join(rootpath,PathAndNames.target,targetname,PathAndNames.description)
             source = open(datapath, "r")
             toutesleslignes = source.readlines()
             self.canvasFrameDescription.delete(tk.ALL)  
