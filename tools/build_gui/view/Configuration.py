@@ -31,7 +31,6 @@ class Configurer(Frame) :
         else:
             self.pathconfig=pathparam
             self.datapath = os.path.join(rootpath, self.pathconfig)
-            print self.datapath
             self.listFiles=self.p.listdirectory(self.datapath)
             
         self.allLists=[]
@@ -65,11 +64,6 @@ class Configurer(Frame) :
                 
                     l=self.p.getValues()
                     l1=self.p.getKeys()
-                    print "l",l,li
-                    print "l1",l1
-                    print "aa",self.p.getLesCles()[1]
-                    print "aa",self.p.getLesVals()[1]
-                    print "ppp",self.p.getTab()
 
                 self.f=LabelFrame( self.frameLabelFrames,bg='#eeeeee',label=label,labelside=ACROSSTOP, padx=5, pady=5 )
                 self.frame=Frame(self.f, bd=2)
@@ -101,8 +95,6 @@ class Configurer(Frame) :
 
                         self.keys=self.p.getLesCles()[n][cpt]
                         self.values=self.p.getLesVals()[n][cpt]
-                        print "mmmmmmmmmmmmmmmmmm",self.values
-                        print "nnnnnnnn",self.keys
 
                     else:
                         self.keys=self.p.getKeys()[cpt]
@@ -127,7 +119,6 @@ class Configurer(Frame) :
                                 self.column+=1;
                                 self.c=self.c+1
                                 data=self.values[1][k]
-                                print data
                                 self.wid=self.show(data)
                                 self.listeWid.append(data)
     
@@ -151,10 +142,7 @@ class Configurer(Frame) :
                                 self.wid.entry.config(state=self.values[1][k])
                         elif (self.values[0][0]=='option'):
                             if (self.keys[k]=='Value'):
-                                print "oooooooooooooooooooooooooooo",self.values[1][k]
                                 self.wid.insert(END,self.values[1][k])
-                            """if (self.keys[k]=='selected'):
-                                self.val[-1].set(self.values[1][k+1])"""
         
                         elif (self.values[0][0]=='arg') and ((self.values[1][0]=="Checkbutton") or (self.values[1][0]=="Radiobutton")  ) :
                             self.frame2=Frame(self.frame, bd=2)
@@ -175,7 +163,6 @@ class Configurer(Frame) :
                                 self.c=self.c+1
                                 self.column+=1;
                                 data=self.values[1][k]
-                                print data
                                 bool=True;
                                 self.wid=self.show(data)
                                 self.listeWid.append(data)
@@ -191,7 +178,6 @@ class Configurer(Frame) :
                                     self.wid.config(onvalue=self.values[1][k])
                                 else:
                                     self.wid.config(value=self.values[1][k])
-                                print self.values[1][k]
                                 def wid():
                                     pass
                                 self.wid.config(command=wid)
@@ -236,7 +222,7 @@ class Configurer(Frame) :
                     try:
                         tkMessageBox.showerror("error"," no default value")
                     except TclError:
-                        print 
+                        pass
                 n+=1
         vbar=Scrollbar(self,orient=VERTICAL)
         vbar.pack(side=RIGHT,fill=Y)

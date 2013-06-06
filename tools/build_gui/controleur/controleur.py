@@ -71,7 +71,6 @@ class Controleur:
                 self.interface.f1.frameipv4.error=True
 
             if self.interface.f1.frameipv4.OnValidate(self.interface.f1.frameipv4.E4):
-                print self.interface.f1.getIp()
                 self.model.addTargetParams(self.interface.f1.getIp())
                 self.interface.f1.setTargetIpParams(self.interface.f1.getIp())
             if (self.interface.f1.frameipv4.error==True) :
@@ -85,7 +84,6 @@ class Controleur:
         self.optionParams=[]
         for i in self.interface.f3.options:
             v=i[1].get()
-            print v
             if ((v=="1")):
                 if (i[0]=="endian"):
                     self.interface.f3.optionParams.append([i[0],"big"])
@@ -95,14 +93,12 @@ class Controleur:
         dis=""
         for i in self.interface.f3.disable: 
             v=i[1].get()
-            print v
             if (v=="1"):
                 if(dis==""):
                     dis=dis+i[0]
                 else:
                     dis=dis+","+i[0]
         self.interface.f3.optionParams.append(["disable",dis])
-        print self.interface.f3.optionParams
         self.interface.cmdLine()
 
        
@@ -120,7 +116,6 @@ class Controleur:
         self.app=os.path.basename(dirname)
     
         if len(dirname ) > 0:
-            print "You chose %s" % self.app
             appParam=view.AppsParam.AppsParam(self.app,"http://192.168.1.4/%s"%self.app)
             id=self.interface.f2.tree.insert('', 'end', text=self.app)
             self.url=""
@@ -131,7 +126,6 @@ class Controleur:
             "self.interface.f2.mymodel.insert( self.interface.f2.i,self.app)"
             self.interface.f2.mymodel.append( self.app)
             self.interface.f2.listApps.append(self.app)
-            print "modeCTRL=" , self.interface.f2.mymodel
            
             
         self.interface.f2.i=self.interface.f2.i+1
@@ -140,7 +134,6 @@ class Controleur:
         self.interface.f2.sconsParamApps=""
         self.interface.f2.mesApps=[]
 #        self.interface.f2.sconsParamApps= self.interface.f2.sconsParamApps +":welcome"
-        print "slistapps",self.interface.f2.listApps
        
      
 

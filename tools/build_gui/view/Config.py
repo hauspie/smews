@@ -9,43 +9,29 @@ class SearchArgs:
         balisefermante = "</args>"
         self.path="/home/rubi/Desktop/m1_s2/smews-master/apps/calendar"
         self.list=self.listdirectory(self.path)
-        print(len(self.list))
         self.lesArgs=[]
         self.lesApps=[]
         cpt=0
         for i in self.list:
-            print i
             self.fichier = open(i,"r")
             self.oneline = self.fichier.readline()
             while self.oneline:
                 if baliseOuverte in self.oneline:
-                    "print self.oneline"
                     self.oneline = self.fichier.readline()
                     while not balisefermante  in self.oneline:
-                        "print self.oneline"
                         self.lesArgs=self.decouperArgs(self.oneline)
                         self.tab=self.lesArgs[1:len(self.lesArgs)-1]
                         self.appConf= AppsConfig.AppsConfig(self.decouperNameAppli(self.path))
                         for j in self.tab:
-                            """if (cpt==0):
-                                cpt=cpt+1
-                                print 
-                            else:"""
                             value=self.decouperLaValeur(j)
                             self.appConf.getArgs().append(value)
                             self.appConf.setArgs(self.appConf.getArgs())
                         self.lesApps.append(self.appConf)
-                        "cpt=cpt+1"
                         self.oneline = self.fichier.readline()
-                    "print  self.oneline "
                     
                 self.oneline = self.fichier.readline()
             self.fichier.close() 
             
-            for a in self.lesApps:
-                print a.getName()
-                for k in a.getArgs():
-                    print k.getName()+"="+ k.getValeur()
                 
         
     def listdirectory(self,path): 
@@ -68,7 +54,6 @@ class SearchArgs:
         t=value[i+1:]
         v=value[0:i]
         couple=AppsConfig.NomValeur(v,t)
-        "print v +t" 
         return couple 
     
     def getAppsArgs(self,nameApps):

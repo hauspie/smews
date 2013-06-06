@@ -19,7 +19,6 @@ class Parser:
             for i in files:
                 if(i.endswith(".c"))or (i.endswith(".h")): 
                     fichier.append(os.path.join(root, i)) 
-        print fichier
         return fichier
     
     def compterLesGroupes(self,file,root):
@@ -28,8 +27,6 @@ class Parser:
         for line in f:
             if root in line:
                 cpt+=1
-                print line
-        print cpt/2
         return cpt/2
     def extractPropsFromXml(self,srcFile):
         self.liste=[];
@@ -47,12 +44,10 @@ class Parser:
             
             self.name.append(str(name))
             self.liste.append(attrs)
-            print 'Start element:', name, attrs
         def end_element(name):
-            print 'End element:', name
+            pass
         def char_data(data):
-            print 'Character data:', repr(data)
-         
+            pass
         p = xml.parsers.expat.ParserCreate()
         
         p.StartElementHandler = start_element
@@ -72,7 +67,6 @@ class Parser:
             
         self.res=[]
         self.label=""
-        print "llllllllllllllllllllll",self.liste
         self.tab=[]
         self.lesCles=[]
         self.lesvals=[]
@@ -89,8 +83,6 @@ class Parser:
                         self.labels.append(self.label)
 
                     self.l.append([str( j),str(i[j])])
-                print "hhhhhhhhh", self.l
-                print "here",self.label
 
             self.res.append(self.l)
         j=0
@@ -99,8 +91,6 @@ class Parser:
         for i in self.res[2:]:
             if len(i)>0:
                 
-                print len(self.res[2:])-1,j
-
                 if (i[0][0]=="label"):
 
                     self.tab.append(self.res[1:][k:j+1])
@@ -169,7 +159,6 @@ class Parser:
             t.append(str(self.name[cpt]))
             values.append([t,self.tabk])
             cpt=cpt+1
-        print "vaaaaaaaaal", values
         j=1
         k=0
         
@@ -178,13 +167,10 @@ class Parser:
 
                 if (i[0][0]=="groups"):
                     self.lesvals.append(values[k:j])
-                    print "valueeeeeeeeees",values[k:j]
                     j+=1
                     k=j
                 elif (j==len(values)-1):
                     self.lesvals.append(values[k-1:])
-                    print "valueeeeeeeeees",values[k-1:j-1]
-
                 else :
                     j+=1
             else :
@@ -198,9 +184,3 @@ if __name__== "__main__":
     s=app.extractPropsFromXml("/home/rubi/Desktop/m1_s2/smews-master/apps/time/time.c")
     l=app.getValues()
     l1=app.getKeys()
-    print "Ssss",len(s)
-    print "l",l
-    print "l1",l1
-    print "l2",app.getTab()
-    print "aa",app.getLesCles()[0]
-    print "aa",app.getLesVals()[0]

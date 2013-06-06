@@ -2,7 +2,12 @@ class Profil:
     def __init__(self,target):
         self.tab=[]
         self.name=target
-        
+
+    def __unicode__(self):
+        return "Profil: {0} -> {1}".format(self.name, self.tab)
+    def __str__(self):
+        return self.__unicode__()
+
     def getName(self):
         return self.name
     

@@ -109,13 +109,10 @@ class OptionsUI(Tix.Frame):
         
         
     def report(self):
-        print "test"
+        pass
     def rep(self):
-        print "b2"
-    
-        
-   
-        
+        pass
+
     def getOptionsParam(self):
         return self.optionParams
         

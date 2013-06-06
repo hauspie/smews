@@ -47,13 +47,9 @@ class targetUI(Tix.Frame):
         self.bool=False
         self.ok=False
         self.sconsParamTarget=[["ipaddr","192.168.1.2"],["target",""]]
-        dir_path = os.path.dirname(os.path.abspath(__file__))
-        print(dir_path)
         rootpath = self.instConfig.rootPath
         relatifpath= self.instConfig.target
-        fn = os.path.join(os.path.dirname(__file__), rootpath)
         datapath = os.path.join(rootpath, relatifpath)
-        print(datapath)
         self.listeDesTargets=self.listdirectory(datapath)
         self.varcombo = Tix.StringVar()
         self.leTarget=""
@@ -114,21 +110,17 @@ class targetUI(Tix.Frame):
             t=self.filterTargetsEtProfil(h)
             if not t in self.listeDesTargets:
                 self.listeDesTargets.append(t)
-                
             p=Profil.Profil(t)
             if not p.getName() in self.tab:
                 self.tab.append(p.getName())
                 self.lesProfils.append(p)
                 p.setTab(self.listeProfil)
-
-            else :
-
+            else:
                 p.setTab(self.listeProfil)
 
         for i in self.listeDesTargets:
             self.comboTarget.insert(self.cpt_target, i)
        
-           
             
         self.frameDesc=Tix.Frame(self,width=300,height=300)
         self.textFrame = Tix.LabelFrame( self.frameDesc,label=' Target description' , padx=5, pady=5 ,bg='#dddddd' ,width=500,height=300)
@@ -195,7 +187,6 @@ class targetUI(Tix.Frame):
         if self.ok== False :
             self.t=self.var.get()
             self.leTarget=self.t
-            print self.leTarget
             self.displayTargetDescription(self.leTarget)
             self.displayTargetPicture(self.leTarget)
             
@@ -224,7 +215,7 @@ class targetUI(Tix.Frame):
     def recupererLesfichiersAvecProfil(self):
         self.listeDesFichiers=[] 
         for i in self.listeDesTargets:
-            if  "_" in i :
+            if  "_" in i:
                 self.listeDesFichiers.append(i)
                 
                 
@@ -240,8 +231,6 @@ class targetUI(Tix.Frame):
         profil=j[i+1:]
         if not t in self.listeDesTargets:
             self.listeProfil=[]
-        self.listeProfil.append(profil)
-
         return t
     
     def getIp (self):
