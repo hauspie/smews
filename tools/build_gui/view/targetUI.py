@@ -15,7 +15,7 @@ import ImageTk
 
 import string
 from model.pathNamesConfig import PathAndNames
-
+import model.targets as Targets
 import view 
 
 
@@ -31,7 +31,6 @@ class targetUI(Tix.Frame):
 
     def listdirectory(self,path): 
         fichier=[] 
-        l = glob.glob(path+'\\*') 
         for filename in os.listdir(path):
             fichier.append( filename) 
          
@@ -49,6 +48,7 @@ class targetUI(Tix.Frame):
         relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
         self.listeDesTargets=self.listdirectory(datapath)
+        print(Targets.get())
         self.varcombo = Tix.StringVar()
         self.leTarget=""
         self.frameIP=Tix.Frame(self, bd=2)
