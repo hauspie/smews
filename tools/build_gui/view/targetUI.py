@@ -48,7 +48,6 @@ class targetUI(Tix.Frame):
         relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
         self.listeDesTargets=self.listdirectory(datapath)
-        print(Targets.get())
         self.varcombo = Tix.StringVar()
         self.leTarget=""
         self.frameIP=Tix.Frame(self, bd=2)
@@ -162,18 +161,31 @@ class targetUI(Tix.Frame):
         self.run.configure(state=Tix.NORMAL)
         valueTarget=self.var.get()
         self.bool=False
-        for p in self.lesProfils:
-            if p.getName()== valueTarget:
-                    self.comboProfil = Tix.ComboBox(self.frameProfil, editable=1, dropdown=1, variable=self.varcombo, command = self.AfficheValeur)
-                    self.profil=Tix.Label(self.frameProfil, text='profil:')
-                    self.profil.grid(column=6, row=2,sticky='W')
-                    self.comboProfil.entry.config(state='readonly')
-#                    self.comboProfil.pack(side=Tix.LEFT)
-                    self.comboProfil.grid(row=2, column=7)
-                    self.bool=True
-                    self.ok=True
-                    for i in p.getProfils():
-                        self.comboProfil.insert(0, i)
+        targets = Targets.get()
+        if valueTarget in targets:
+            if len(targets[valueTarget]):
+                self.comboProfil = Tix.ComboBox(self.frameProfil, editable=1, dropdown=1, variable=self.varcombo, command = self.AfficheValeur)
+                self.profil=Tix.Label(self.frameProfil, text='profil:')
+                self.profil.grid(column=6, row=2,sticky='W')
+                self.comboProfil.entry.config(state='readonly')
+                self.comboProfil.grid(row=2, column=7)
+                self.bool=True
+                self.ok=True
+                for i in targets[valueTarget]:
+                    self.comboProfil.insert(0, i)
+                
+#         for p in self.lesProfils:
+#             if p.getName()== valueTarget:
+#                     self.comboProfil = Tix.ComboBox(self.frameProfil, editable=1, dropdown=1, variable=self.varcombo, command = self.AfficheValeur)
+#                     self.profil=Tix.Label(self.frameProfil, text='profil:')
+#                     self.profil.grid(column=6, row=2,sticky='W')
+#                     self.comboProfil.entry.config(state='readonly')
+# #                    self.comboProfil.pack(side=Tix.LEFT)
+#                     self.comboProfil.grid(row=2, column=7)
+#                     self.bool=True
+#                     self.ok=True
+#                     for i in p.getProfils():
+#                         self.comboProfil.insert(0, i)
                     
         if self.bool==False:
             self.frameProfil.destroy()
