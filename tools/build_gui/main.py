@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python2
 import Tkinter as tk
 from controleur.controleur import Controleur
  
