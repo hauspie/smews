@@ -1,0 +1,5 @@
+For the build_gui to work you will need:
+- python 2.7.x
+- PIL module
+- tcl/tk
+- Tix
