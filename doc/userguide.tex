@@ -189,7 +189,7 @@ $ scons -h
 \end{verbatim}
 
 \subsection{Exhaustive description}
-
+\label{sec:exha-descr}
 The Smews compilation chain has many arguments enabling different options. The only necessary argument for a build is \verb+target+. All other arguments are optional and have a default value. \rtab{sconsargs} synthesizes the list of available arguments. We give here a precise description of every argument.
 
 \begin{table}
@@ -333,14 +333,42 @@ After this step, you can reach Smews at its IP address by using any HTTP/1.1 com
 In this section we detail the various steps to compile SMEWS applications
 through the GUI and we explain how to add and modify properties.
 
+\subsection{Requirements}
+
+For using the graphical build interface, you will need:
+\begin{itemize}
+\item Python 2.7.x (at the time of writing this guide, the PIL module is not available for python3),
+\item PIL module for python,
+\item TCL/TK and Tix with their associated python module.
+\end{itemize}
+
+To test if your installation is compatible with the build interface, simply
+launch a python interpreter and import the following packages:
+
+\begin{verbatim}
+Python 2.7.5 (default, May 12 2013, 12:00:47) 
+[GCC 4.8.0 20130502 (prerelease)] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import Image
+>>> import Tix
+>>> 
+\end{verbatim}
+
+If python does not complain, then you can use the build interface.
+
+\subsection{Launching the build interface}
+
+The build interface is located in the folder \verb!tools/build_gui!. To launch
+the program, simply launch \verb!python main.py!\footnote{This assumes that
+  your default python version is 2.x.}
+
 \subsection{Compilation}
-The GUI has multiple tabs: Target, Applis and Options.  The target tab contains
-all properties related to a specific target like IP address, profiles of a
-target if it exists and a short description of the selected target with
-accompanying picture.  The Applis tab provides to the user an easy and
+The GUI has multiple tabs: Target, Applications and Options.  The Target tab
+contains all properties related to a specific target like IP address, profiles
+of a target if it exists and a short description of the selected target with
+accompanying picture.  The Applications tab provides to the user an easy and
 convenient way to choose the web application.  The options tab contains all
-other options which are rarely modified.  
-\medskip
+other options which are rarely modified.  \medskip
 
 To build smews using the graphic user
 interface:
@@ -359,37 +387,45 @@ interface:
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{TargetUI}
-\caption{target tab}
+\caption{Target tab.}
 \end{figure}
-\item[In the Applies tab]: (optional : welcome application is selected by
+\item[In the Applications tab]: (optional : welcome application is selected by
   default if none specified). Click add and specify a web application. It’s
   possible to choose multiple web application. For each application you can see
   the URL of the application as it will be available after uploading.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{AppsUI}
-\caption{application tab}
+\caption{Applications tab}
 \end{figure}
-\item[In the options tab]: (optional) For each option, you can select a
-  disabled or enabled value. Options are initialized by default values.  Some
-  applications need more configurations. So you have to press the configure
-  button, in the “applis” tab, to display a new interface which contains one or
-  more properties, each property combines a set of widgets representing the
-  different constants. The widgets are initialized with the constants
-  values. If selected applications don’t have any property, a dialog box
-  appears informing you that no property exists for the selected
-  applications. You can change values and press “validate”.  To finally launch
-  the compilation, press the build button to compile, and the upload button to
-  .  Ps: The user will be warned if one of the information entered is invalid.
+\item[In the options tab]: (optional) This tab allows you to set the various
+  general build options as described in section~\ref{sec:exha-descr}.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{OptionsUI}
-\caption{options tab}
+\caption{Options tab.}
 \end{figure}
 
 
 \end{description}
-\subsection{Add or update properties}
+\subsection{Target and application configuration}
+
+\subsubsection{Using the interface to modify target of application parameters}
+Target and applications can be configured in the interface. The goal of this
+configuration is to modify preprocessor defines. Modifying the available
+configuration variables for the target or an application is done by using the
+\verb!config! button in either the \verb!Target! tab or the \verb!Applications!
+tab respectivelly. When clicking the config button, the interface will scan the
+C files and load the values of the preprocessor defines that have been declared using
+a specific XML synthax. This synthax is described in the next section.
+
+When you change the value of a parameter, the corresponding preprocessor define
+is modifed in the C file. Thus, if you re-open the config interface, the last
+configured value will be used.
+
+\subsubsection{Declaring configuration parameters}
+
+
 For dynamics options and configurations the developer has to add XML code in a
 file of a specific application which needs some constants that depends on
 user’s needs and options. The XML code must represent a description of the
@@ -407,16 +443,13 @@ Some examples of XML code:
     \fbox{
       \colorbox{black!10}{
 		\begin{minipage}{1\textwidth}
-root of the xml code :\\
-\\
+Defining a new parameter group\\
 {\tt <group label="toto>}
 
-To enter a single line of text :\\
-\\
+A string parameter :\\
 {\tt <arg name="m1" type="int" show="Entry"/> }
 
 Radio buttons to implement a one-of-many propositions "  \\
-\\
 {\tt <arg name="m4" show="Radiobutton">\\
 	<input show="Radiobutton" selected="true" text="myradio1" Value="1"/>\\
 	<input  show="Radiobutton" text="myradio2" Value="2"/>\\
@@ -425,7 +458,6 @@ Radio buttons to implement a one-of-many propositions "  \\
 
 
 Combobox to display a liste of propositions : \\
-\\
 {\tt <arg name="m2" state="readonly"  show="ComboBox">
 \begin{tabbing}
   
@@ -438,7 +470,6 @@ Combobox to display a liste of propositions : \\
 }
 
 a slider :\\
-\\
 {\tt <arg name="m7" from="0.5" to="100" orient="horizontal" resolution="0.1"
 tickinterval="50" length="70m" show="Scale"/>
  }
@@ -1417,7 +1448,7 @@ support
  \item[Michaël Hauspie] wrote the MBED ethernet port, the GPIP feature and the
    ICMPv4 and ICMPv6 applications
  \item[Jean-Fran\c{c}ois Hren] designed the Smew (bird) in the Smews logo ;)
- \item[Rabab Bouziane \textnormal{and} Jomaa Narjes] wrote the graphical build interface.
+ \item[Rabab Bouziane \textnormal{and} Narjes Jomaa] wrote the graphical build interface.
 \end{description}
 Thanks to \textbf{Gilles Grimaud} for his kind supervision and his wise advices.
 

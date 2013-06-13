@@ -37,7 +37,7 @@ class interface(Tix.Tk):
         nb.add("page1", label="Target")
         nb.add("page3", label="Options")
 
-        nb.add("page2", label="Applis")
+        nb.add("page2", label="Applications")
         self.cmd=""
         p1 = nb.subwidget_list["page1"]
         p2 = nb.subwidget_list["page2"]
