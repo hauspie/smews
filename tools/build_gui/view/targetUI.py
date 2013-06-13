@@ -47,7 +47,7 @@ class targetUI(Tix.Frame):
         rootpath = PathAndNames.rootPath
         relatifpath= PathAndNames.target
         datapath = os.path.join(rootpath, relatifpath)
-        self.listeDesTargets=self.listdirectory(datapath)
+        self.listeDesTargets=Targets.get()
         self.varcombo = Tix.StringVar()
         self.leTarget=""
         self.frameIP=Tix.Frame(self, bd=2)
@@ -100,20 +100,6 @@ class targetUI(Tix.Frame):
  #       self.frameProfil.pack(side=Tix.LEFT)
         self.frameProfil.grid(row=2, column=3)
         self.frameCombo.grid(row=2, column=1, sticky='W')
-        self.lesProfils=[]
-        self.tab=[]
-        self.listeProfil=[]
-        for h in self.listeDesFichiers:
-            t=self.filterTargetsEtProfil(h)
-            if not t in self.listeDesTargets:
-                self.listeDesTargets.append(t)
-            p=Profil.Profil(t)
-            if not p.getName() in self.tab:
-                self.tab.append(p.getName())
-                self.lesProfils.append(p)
-                p.setTab(self.listeProfil)
-            else:
-                p.setTab(self.listeProfil)
 
         for i in self.listeDesTargets:
             self.comboTarget.insert(self.cpt_target, i)
@@ -173,19 +159,8 @@ class targetUI(Tix.Frame):
                 self.ok=True
                 for i in targets[valueTarget]:
                     self.comboProfil.insert(0, i)
+                self.comboProfil.pick(0)
                 
-#         for p in self.lesProfils:
-#             if p.getName()== valueTarget:
-#                     self.comboProfil = Tix.ComboBox(self.frameProfil, editable=1, dropdown=1, variable=self.varcombo, command = self.AfficheValeur)
-#                     self.profil=Tix.Label(self.frameProfil, text='profil:')
-#                     self.profil.grid(column=6, row=2,sticky='W')
-#                     self.comboProfil.entry.config(state='readonly')
-# #                    self.comboProfil.pack(side=Tix.LEFT)
-#                     self.comboProfil.grid(row=2, column=7)
-#                     self.bool=True
-#                     self.ok=True
-#                     for i in p.getProfils():
-#                         self.comboProfil.insert(0, i)
                     
         if self.bool==False:
             self.frameProfil.destroy()
@@ -254,16 +229,8 @@ class targetUI(Tix.Frame):
         
     def AfficheValeur (self,evt):
         self.leTarget= self.var.get()
-        trouve=False
-        i=0
-        while trouve==False :
-            p =self.lesProfils[i]
-            if p.getName()== self.var.get():
-                    trouve=True
-                    
-                    self.leTarget+="_"
-                    self.leTarget+=self.varcombo.get()
-            else : i=i+1
+        self.leTarget+="_"
+        self.leTarget+=self.varcombo.get()
         self.displayTargetDescription(self.leTarget)
         self.displayTargetPicture(self.leTarget)  
         
