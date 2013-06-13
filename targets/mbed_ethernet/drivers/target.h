@@ -36,6 +36,23 @@
 #ifndef __TARGET_H__
 #define __TARGET_H__
 
+/* Configuration parameters for use with the smews GUI */
+
+/*
+<config>
+<group label="Network interface configuration">
+
+   <arg name="DEV_MTU" type="int" show="Entry" />
+   <arg name="STACK_SIZE" type="int" show="Entry" />
+   <arg name="ALLOC_SIZE" type="int" show="Entry" />
+   <arg name="RX_BUFFER_COUNT" from="2" to="20" orient="horizontal" resolution="1" show="Scale" />
+   <arg name="TX_BUFFER_COUNT" from="2" to="20" orient="horizontal" resolution="1" show="Scale" />
+   
+</group>
+</config>
+*/
+
+
 /* Other c and h target-specific files must be located in the drivers directory */
 
 /* Types definition */
@@ -146,9 +163,10 @@
 #define ALLOC_SIZE 4096
 
 /* Ethernet configuration */
+#define RX_BUFFER_COUNT 10
 /* Number of frame descriptors for reception. For each descriptor,
  * 16 bytes will be needed */
-#define RX_DESCRIPTORS 10
+#define RX_DESCRIPTORS (RX_BUFFER_COUNT)
 /* Size of the reception buffers. One buffer will be needed per reception descriptor
    The buffers will be store in the external SRAM. So 32K of RAM is available ONLY for this buffers
  */
@@ -159,7 +177,7 @@
 #define TX_BUFFER_COUNT 10
 /* Number of frame descriptors for transmission. For each descriptor,
  * 12 bytes will be needed */
-#define TX_DESCRIPTORS 20
+#define TX_DESCRIPTORS (TX_BUFFER_COUNT*2)
 /* Maximum number of fragment that we can use to create one ethernet frame. Must less than the number of descriptos */
 #define TX_MAX_FRAGMENTS 10
 

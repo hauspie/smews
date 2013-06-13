@@ -103,7 +103,6 @@ class Parser:
                     j+=1
             else :
                 j+=1
-
         return  self.res[1:]
     
     def getTab(self):

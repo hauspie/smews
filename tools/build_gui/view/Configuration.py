@@ -200,15 +200,13 @@ class Configurer(Frame) :
                         bool2=False
                     else :
                         
-                        self.frame2.pack(fill=BOTH,  side=TOP, anchor=W, expand=YES)
-#                        self.frame2.grid(row=self.row, column=1,sticky='W')
+                        self.frame2.grid(row=self.row, column=1,sticky='W')
         
                 "if(len(self.list)>0):"
                 if(len(self.p.getTab()[n])>0):
 
                     
                     self.listOfFiles.append(li)
-                    self.f.pack()
                     self.f.grid(row=cptInsert, column=0,sticky='W')
                     cptInsert+=1
                     self.valTot.append(self.val)
@@ -295,7 +293,6 @@ class Configurer(Frame) :
                 pass
             
             widget.config(command=wid)
-        widget.pack(padx=2,side=LEFT)
         widget.grid(column=self.column, row=self.row, sticky='W')
         self.index=self.index+1
         return widget
@@ -327,7 +324,6 @@ class Configurer(Frame) :
 
     def label(self, name ):
         widget = Label(self.frame, text=name)
-        widget.pack(padx=2,side=LEFT)
         widget.grid(column=self.column, row=self.row, sticky='W')
         return widget
     
