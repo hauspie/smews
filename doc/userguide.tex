@@ -428,11 +428,17 @@ configured value will be used.
 
 For dynamics options and configurations the developer has to add XML code in a
 file of a specific application which needs some constants that depends on
-user’s needs and options. The XML code must represent a description of the
-widget that will be displayed. Widgets must be grouped by property, and each
-property has a specific name. You can add one or more group of properties.  The
-constant can be created during the SMEWS compilation, so in this case, you must
-specify the default value in the description of the relative widget.
+user’s needs and options. 
+
+The embedded XML code must be inside C comments and in a
+\verb!<config> </config>! XML node. You can have a look on the \verb!target.h!
+file of the \verb!mbed_ethernet! target for an example of how it works.
+
+The XML code must represent a description of the widget that will be
+displayed. Widgets must be grouped by property, and each property has a
+specific name. You can add one or more group of properties.  The constant can
+be created during the SMEWS compilation, so in this case, you must specify the
+default value in the description of the relative widget.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.9]{Appsconfig}
@@ -457,7 +463,7 @@ Radio buttons to implement a one-of-many propositions "  \\
 </arg>}
 
 
-Combobox to display a liste of propositions : \\
+Combobox to display a list of propositions : \\
 {\tt <arg name="m2" state="readonly"  show="ComboBox">
 \begin{tabbing}
   
@@ -469,7 +475,7 @@ Combobox to display a liste of propositions : \\
 \end{tabbing}
 }
 
-a slider :\\
+Slider :\\
 {\tt <arg name="m7" from="0.5" to="100" orient="horizontal" resolution="0.1"
 tickinterval="50" length="70m" show="Scale"/>
  }
@@ -478,7 +484,7 @@ tickinterval="50" length="70m" show="Scale"/>
 		\end{minipage}
       }
    } 
-\caption{XML markers for dynamic contents}
+\caption{XML markers for application and target configuration}
 \label{tab:appsxml}
 \end{table}
 
