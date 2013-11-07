@@ -209,7 +209,6 @@ for appDir in dirsMap.keys():
 globalEnv.Replace(CC = 'gcc')
 globalEnv.Replace(AS = 'as')
 globalEnv.Replace(AR = 'ar')
-globalEnv.Replace(LINK = 'ld')
 globalEnv.Append(CCFLAGS = '-Wall')
 if sdump:
 	globalEnv.Append(CCFLAGS = '-DSTACK_DUMP')
@@ -220,7 +219,7 @@ else:
 		globalEnv.Append(CCFLAGS =  '-Os -fno-strict-aliasing')
 	else :
 		globalEnv.Append(CCFLAGS =  '-Os -ffunction-sections -fdata-sections -fno-strict-aliasing')	
-	globalEnv.Append(LINKFLAGS = '--gc-sections --print-gc-sections')
+	globalEnv.Append(LINKFLAGS = '-Wl,--gc-sections,--print-gc-sections')
 globalEnv.Append(CPPDEFINES = {'CHUNCKS_NBITS' : str(chuncksNbits)})
 for func in toDisable:
 	globalEnv.Append(CPPDEFINES = { disabledHash[func] : '1'})
