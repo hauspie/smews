@@ -11,7 +11,6 @@
 #include "elf_allocator.h"
 
 #include "elfloader-otf.h"
-#include "codeprop-otf.h"
 #include "RamFileSystem.h"
 
 #include "application.h"
@@ -30,6 +29,10 @@ const char *elf_loader_return_labels[] = {
 
 /* Storage buffer */
 #define STORAGE_BUFFER_SIZE 512
+
+/* Pointer to the output handler (which will actually write the relocated code) */
+extern struct elfloader_output *codeprop_output;
+
 
 static uint8_t storage_buffer[STORAGE_BUFFER_SIZE];
 
