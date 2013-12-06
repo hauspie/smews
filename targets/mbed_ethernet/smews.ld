@@ -19,7 +19,7 @@
 
   Author: Michael Hauspie <Michael.Hauspie@univ-lille1.fr>
   Created: Nov. 12 2010
-  Time-stamp: <2011-09-28 10:11:51 (mickey)>
+  Time-stamp: <2013-12-06 14:19:41 (hauspie)>
 */
 
 /* output format of the file.
@@ -64,7 +64,9 @@ SECTIONS
   *(.interrupt_vector) ;
   _interrupt_end = .;
 
-  . = 0x10000;
+  . =  0x1000;
+  *(.flash_storage); /* This can be used to put arrays in flash in 4k pages,
+   which are easier to user than 32k pages */
 
   *(.text*) ;
   /* Constant data is also put in flash */
