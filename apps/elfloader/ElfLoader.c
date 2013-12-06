@@ -8,11 +8,9 @@
 </generator>
 */
 
-#include "elf_allocator.h"
-
-#include "elfloader-otf.h"
-#include "RamFileSystem.h"
-
+#include "arm_elfloader/elfloader-otf.h"
+#include "arm_elfloader/elfloader-deps/allocator.h"
+#include "arm_elfloader/elfloader-deps/rfs.h"
 #include "application.h"
 
 struct file_t {
@@ -26,6 +24,11 @@ const char *elf_loader_return_labels[] = {
  "Unhandled Relocation", "Out Of Range", "Relocation Not Sorted", "Input Error", "Output Error"
 };
 
+/* Flash temp buffer */
+#ifndef ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS
+#define ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS ((char *)0x0000C000)
+#endif
+const void * elf_allocator_storage = ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS;
 
 /* Storage buffer */
 #define STORAGE_BUFFER_SIZE 512
@@ -71,7 +74,7 @@ extern char _text_end;
 /*-----------------------------------------------------------------------------*/
 static char initElfLoader() {
   
-  elf_applications_init(elf_allocator_flash_alloc, NULL);
+  elf_applications_init(allocator_flash_alloc, NULL);
   printf("text end %p\r\n", &_text_end);
   return 1;
 }
@@ -157,18 +160,29 @@ void clean_up(struct file_t *file) {
     mem_free(file, sizeof(struct file_t));
 }
 
+/* Implements functions needed by elfloader (see elfloader-deps.h) */
+int elf_read(void *fd, char *buf, int len)
+{
+    return rfs_read(fd, buf, len);
+}
+
+int elf_seek(void *fd, int offset)
+{
+    return rfs_seek(fd, offset);
+}
+
+
 /*-----------------------------------------------------------------------------*/
 static char doPostOut(uint8_t content_type, void *data) {
 
   printf("%s IN\r\n", __FUNCTION__);
   if(data) {
 
-    uint16_t i;
     struct file_t *file =  (struct file_t*)data;
     void *storage_handle;
     int loading;
 
-    storage_handle   = rfs_open((void *)elf_allocator_storage);
+    storage_handle   = rfs_open((void *)elf_allocator_storage, file->size);
 
     if(storage_handle == NULL) {
       out_str("Unable to open elf storage");

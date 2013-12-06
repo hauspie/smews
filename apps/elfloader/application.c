@@ -1,6 +1,6 @@
 #include "application.h"
-#include "elf_allocator.h"
-#include "tinyLibC.h"
+#include "arm_elfloader/elfloader-deps/allocator.h"
+#include "arm_elfloader/elfloader-deps/tiny-lib-c.h"
 
 static struct elf_application_t application_buffer;
 
@@ -17,7 +17,7 @@ char application_add(const char *filename, uint16_t size,
 
   data_source = NULL;
   if(data_size > 0) {
-    data_source = (char *)elf_allocator_flash_alloc(data_size);
+    data_source = (char *)allocator_flash_alloc(data_size);
     if(APPLICATION_WRITE(data_source, data_address, data_size) != 0) {
       printf("FAILED to allocate data storage\r\n");
       return 0;
@@ -39,7 +39,7 @@ char application_add(const char *filename, uint16_t size,
   /* Fill the application structure */
   /* +1 to keep the '\0' character */
   filenameLength = strlen(filename) + 1;
-  application_buffer.filename = elf_allocator_flash_alloc(filenameLength);
+  application_buffer.filename = allocator_flash_alloc(filenameLength);
   if(APPLICATION_WRITE(application_buffer.filename, filename, filenameLength) != 0) {
     printf("FAILED TO WRITE application filename\r\n");
     return 0;
@@ -54,7 +54,7 @@ char application_add(const char *filename, uint16_t size,
   application_buffer.data_source      = data_source;
   application_buffer.data_size        = data_size;
 
-  applicationInFlash = (struct elf_application_t *)elf_allocator_flash_alloc(sizeof(struct elf_application_t));
+  applicationInFlash = (struct elf_application_t *)allocator_flash_alloc(sizeof(struct elf_application_t));
   
   res = APPLICATION_WRITE(applicationInFlash, &application_buffer, sizeof(struct elf_application_t));
 

@@ -1,0 +1,7 @@
+makefile.dep
+*.o
+*~
+*.bin
+*.elf
+*.map
+*.a

@@ -1,0 +1,3 @@
+[submodule "sample/rflpc"]
+	path = sample/rflpc
+	url = https://github.com/hauspie/rflpc.git

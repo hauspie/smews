@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "symbols.h"
+#include "arm_elfloader/symbols.h"
 #include "../../core/generators.h"
 #include "../../core/connections.h"
 #include "../../core/timers.h"
