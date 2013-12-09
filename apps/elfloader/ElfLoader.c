@@ -13,6 +13,7 @@
 #include "arm_elfloader/elfloader-deps/rfs.h"
 #include "application.h"
 
+#define DEBUG
 #ifdef DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -94,6 +95,7 @@ struct flash_buffer {
 static struct flash_buffer flash_buffer;
 static void flash_buffer_reset(void)
 {
+    PRINTF("Reset flash buffer\r\n");
     flash_buffer.ram_offset = 0;
     flash_buffer.flash_offset = 0;
 }
@@ -101,14 +103,20 @@ static int flash_buffer_flush(void)
 {
     if (flash_buffer.ram_offset <= 0)
 	return 0;
+    PRINTF("Flushing %d bytes\r\n", flash_buffer.ram_offset);
     if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
         PRINTF("An error happened while flushing elf to storage\r\n");
         return -1;
     }
 }
-static int flash_buffer_write(uint8_t byte)
+static int flash_buffer_write_byte(uint8_t value)
 {
     
+    if (flash_buffer.flash_offset >=  ELF_ALLOCATOR_FLASH_STORAGE_SIZE)
+    {
+	PRINTF("No more flash space for receiving elf file\r\n");
+	return -1;
+    }
     if(flash_buffer.ram_offset < STORAGE_BUFFER_SIZE) 
     {
 	flash_buffer.storage_buffer[flash_buffer.ram_offset] = value;
@@ -116,10 +124,11 @@ static int flash_buffer_write(uint8_t byte)
     } 
     else 
     {
-      /* Commit buffer */
-      if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
-        PRINTF("An error happened while flashing elf to storage\r\n");
-        return -1;
+	PRINTF("Writing buffer to flash offset %d\r\n", flash_buffer.flash_offset);
+	/* Commit buffer */
+	if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
+	    PRINTF("An error happened while flashing elf to storage\r\n");
+	    return -1;
       }
 
       flash_buffer.flash_offset += STORAGE_BUFFER_SIZE;
@@ -176,7 +185,7 @@ static char doPostIn(uint8_t content_type, /*uint16_t content_length,*/ uint8_t 
 	  return 1;
       i++;
   }
-  if (flash_buffer_flush() == --1)
+  if (flash_buffer_flush() == -1)
       return 1;
 
   file->size = i;
