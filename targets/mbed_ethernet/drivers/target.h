@@ -130,7 +130,20 @@
 /* Gets an address from address x */
 #define APPLICATION_READ_ADDR(x) CONST_READ_ADDR(x)
 
-#define APPLICATION_WRITE(dst, src, len) rflpc_iap_write_buffer(dst, src, len)
+#define DEBUG
+#ifdef DEBUG
+static int _mbed_app_write(void *dst, const void *src, int len)
+{
+    int ret;
+    printf("Writing from %p to %p (%d bytes)\r\n", src, dst, len);
+    ret = rflpc_iap_write_buffer(dst, src, len);
+    printf("Ret: %d\r\n", ret);
+    return ret;
+}
+#define APPLICATION_WRITE(dst, src, len) _mbed_app_write((dst), (src), (len))
+#else
+#define APPLICATION_WRITE(dst, src, len) rflpc_iap_write_buffer((dst), (src), (len))
+#endif
 
 /* Endianness: define ENDIANNESS as LITTLE_ENDIAN or BIG_ENDIAN */
 #ifndef ENDIANNESS

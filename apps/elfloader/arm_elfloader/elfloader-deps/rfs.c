@@ -62,7 +62,7 @@ int rfs_seek(void *aHandle, int anOffset) {
 
     if (anOffset >= rfs->size)
     {
-	PRINTF("Failed to seek: %d %d %d\r\n", rfs->size, anOffset);
+	PRINTF("Failed to seek: %d %d\r\n", rfs->size, anOffset);
 	return -1;
     }
 

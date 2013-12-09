@@ -1,7 +1,5 @@
 /*
-* Copyright or © or Copr. 2008, Simon Duquennoy
-*
-* Author e-mail: simon.duquennoy@lifl.fr
+* Copyright or © or Copr. 2013, Gregory Guche
 *
 * This software is a computer program whose purpose is to design an
 * efficient Web server for very-constrained embedded system.
