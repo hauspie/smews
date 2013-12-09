@@ -13,7 +13,7 @@
 #include "arm_elfloader/elfloader-deps/rfs.h"
 #include "application.h"
 
-#define DEBUG
+/*#define DEBUG*/
 #ifdef DEBUG
 #define PRINTF(...) printf(__VA_ARGS__)
 #else
@@ -108,6 +108,7 @@ static int flash_buffer_flush(void)
         PRINTF("An error happened while flushing elf to storage\r\n");
         return -1;
     }
+    return 0;
 }
 static int flash_buffer_write_byte(uint8_t value)
 {

@@ -130,7 +130,7 @@
 /* Gets an address from address x */
 #define APPLICATION_READ_ADDR(x) CONST_READ_ADDR(x)
 
-#define DEBUG
+/*#define DEBUG*/
 #ifdef DEBUG
 static int _mbed_app_write(void *dst, const void *src, int len)
 {
