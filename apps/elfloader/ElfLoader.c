@@ -13,6 +13,12 @@
 #include "arm_elfloader/elfloader-deps/rfs.h"
 #include "application.h"
 
+#ifdef DEBUG
+#define PRINTF(...) printf(__VA_ARGS__)
+#else
+#define PRINTF(...) do {} while(0)
+#endif
+
 struct file_t {
   char *filename;
   uint16_t size;
@@ -32,15 +38,12 @@ const char allocator_flash_storage_space[ELF_ALLOCATOR_FLASH_STORAGE_SIZE] __att
 #endif
 const void * elf_allocator_storage = ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS;
 
-/* Storage buffer */
-#define STORAGE_BUFFER_SIZE 512
 
 /* Pointer to the output handler (which will actually write the relocated code) */
 extern struct elfloader_output *codeprop_output;
 
 
-static uint8_t storage_buffer[STORAGE_BUFFER_SIZE];
-
+#ifdef DEBUG
 void flash_dump() {
   int i, index, maxInfosPerLine;
   int allocatorSize = 256;
@@ -48,51 +51,98 @@ void flash_dump() {
 
   maxInfosPerLine = 16;
   
-  printf("\r\nFlash Dump:\r\n");
-  printf("---------\r\n");
+  PRINTF("\r\nFlash Dump:\r\n");
+  PRINTF("---------\r\n");
 
   index = 0;
   while(allocatorSize > maxInfosPerLine) {
 
-    printf("%p ", flash + index);
+    PRINTF("%p ", flash + index);
 
     for(i = 0; i < maxInfosPerLine; i++, index++)
-      printf("%02X, ", flash[index]);
+      PRINTF("%02X, ", flash[index]);
 
-    printf("\r\n");
+    PRINTF("\r\n");
     allocatorSize -= maxInfosPerLine;
   }
 
   if(allocatorSize>0) {
-    printf("%p ", flash + index);
+    PRINTF("%p ", flash + index);
     for(i = 0; i < allocatorSize; i++, index++)
-      printf("%02X, ", flash[index]);
-    printf("\r\n");
+      PRINTF("%02X, ", flash[index]);
+    PRINTF("\r\n");
   }
 
-  printf("\r\n");
+  PRINTF("\r\n");
 }
-extern char _text_end;
+#endif
 /*-----------------------------------------------------------------------------*/
 static char initElfLoader() {
   
   elf_applications_init(allocator_flash_alloc, NULL);
-  printf("text end %p\r\n", &_text_end);
   return 1;
 }
+
+/*-----------------------------------------------------------------------------*/
+/* Buffered write to flash */
+#define STORAGE_BUFFER_SIZE 512
+struct flash_buffer {
+    int ram_offset;
+    int flash_offset;
+    uint8_t storage_buffer[STORAGE_BUFFER_SIZE];
+};
+static struct flash_buffer flash_buffer;
+static void flash_buffer_reset(void)
+{
+    flash_buffer.ram_offset = 0;
+    flash_buffer.flash_offset = 0;
+}
+static int flash_buffer_flush(void)
+{
+    if (flash_buffer.ram_offset <= 0)
+	return 0;
+    if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
+        PRINTF("An error happened while flushing elf to storage\r\n");
+        return -1;
+    }
+}
+static int flash_buffer_write(uint8_t byte)
+{
+    
+    if(flash_buffer.ram_offset < STORAGE_BUFFER_SIZE) 
+    {
+	flash_buffer.storage_buffer[flash_buffer.ram_offset] = value;
+	flash_buffer.ram_offset++;
+    } 
+    else 
+    {
+      /* Commit buffer */
+      if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
+        PRINTF("An error happened while flashing elf to storage\r\n");
+        return -1;
+      }
+
+      flash_buffer.flash_offset += STORAGE_BUFFER_SIZE;
+      flash_buffer.storage_buffer[0] = value;
+      flash_buffer.ram_offset = 1;
+    }
+    return 0;
+}
+/* End of flash buffer functions */
+/*-----------------------------------------------------------------------------*/
+
+
 
 /*-----------------------------------------------------------------------------*/
 static char doPostIn(uint8_t content_type, /*uint16_t content_length,*/ uint8_t call_number, 
                      char *filename, void **post_data) {
   uint16_t i = 0;
-  uint16_t j = 0;
-  uint16_t k = 0;
   short value;
-  printf("%s IN\r\n", __FUNCTION__);
+  PRINTF("%s IN\r\n", __FUNCTION__);
 
   if(!filename)  return 1;
 
-  // Leave when data is already available..
+  /* Leave when data is already available.. */
   if(*post_data) return 1;
 
   struct file_t *file = mem_alloc(sizeof(struct file_t));
@@ -113,44 +163,26 @@ static char doPostIn(uint8_t content_type, /*uint16_t content_length,*/ uint8_t 
     file->filename[i] = filename[i];
   }while(filename[i++] != '\0');
 
-  /* Size + storage */
+  /* When receiving the elf file from post, 
+     store it directly in flash without relocation.
+     The relocation will be performed in the postOut handler.
+
+     File writes to flash are buffered using the storage_buffer RAM buffer.
+   */
   i = 0;
+  flash_buffer_reset();
   while((value = in()) != -1) {
-    /*printf("%d\r\n", i);*/
-
-    if(j < STORAGE_BUFFER_SIZE) {
-      storage_buffer[j] = value;
-      j++;
-    } else {
-
-      /* Commit buffer */
-      if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + k, storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
-        printf("An error happened while flashing elf to storage\r\n");
-        return 1;
-      }
-
-      k += STORAGE_BUFFER_SIZE;
-      printf("%d\r\n", k);
-      storage_buffer[0] = value;
-      j = 1;
-    }
-    
-    i++;
+      if (flash_buffer_write_byte(value) == -1)
+	  return 1;
+      i++;
   }
+  if (flash_buffer_flush() == --1)
+      return 1;
 
-  if(j > 0) {
-    if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + k, storage_buffer, j) != 0) {
-        printf("An error happened while flashing elf to storage\r\n");
-        return 1;
-      }
-  }
   file->size = i;
 
-  //printf("File Size is %d\r\n", file->size);
-
-    
+  /* The post_data pointer is used to retrieve the file structure in the postOut handler */
   *post_data = file;
-  printf("%s OUT\r\n", __FUNCTION__);
   return 1;
 }
 
@@ -177,74 +209,89 @@ int elf_seek(void *fd, int offset)
 /*-----------------------------------------------------------------------------*/
 static char doPostOut(uint8_t content_type, void *data) {
 
-  printf("%s IN\r\n", __FUNCTION__);
-  if(data) {
-
     struct file_t *file =  (struct file_t*)data;
     void *storage_handle;
     int loading;
 
-    storage_handle   = rfs_open((void *)elf_allocator_storage, file->size);
+    PRINTF("%s IN\r\n", __FUNCTION__);
+    if (!file)
+    {
+	out_str("Please provide a file");
+	return 1;
+    }
 
+  
+    /* Open the flash memory zone where the original elf file (not relocated)
+       has been stored in the doPostIn handler. The handle will allow the elf
+       loader to perform seeks and reads in the elf_file
+    */
+    storage_handle = rfs_open((void *)elf_allocator_storage, file->size);
+  
     if(storage_handle == NULL) {
-      out_str("Unable to open elf storage");
-      clean_up(file);
-      return 1;
+	out_str("Unable to open elf storage");
+	clean_up(file);
+	return 1;
     }
 
     elfloader_init();
-    printf("ElfLoader loading...\r\n");
+    PRINTF("ElfLoader loading...\r\n");
+    /* Perform the actual relocation of the elf file.  The elf will be read
+       thanks to the storage_handle 'pseudo filesystem' and will be writen
+       thanks to the functions pointed by the structure codeprop_outputs.  The
+       implementations of the later function are given in the
+       arm_elfloader/elfloader-deps/segments-ouput.c file
+    */
     loading = elfloader_load(storage_handle, codeprop_output);
 
-    printf("Loading = %d\r\n", loading);
+    PRINTF("Loading = %d\r\n", loading);
     if(loading == ELFLOADER_OK) {
-      /*flash_dump();*/
-      printf("Elf Application Environment is %p\r\n", elf_application_environment);
+	/*flash_dump();*/
+	PRINTF("Elf Application Environment is %p\r\n", elf_application_environment);
 
-      printf("Install function is %p\r\n", elf_application_environment->install);
-      printf("Remove function is %p\r\n", elf_application_environment->remove);
-      printf("URLS Tree is %p\r\n", elf_application_environment->urls_tree);
-      printf("Resources index is %p\r\n", elf_application_environment->resources_index);
+	PRINTF("Install function is %p\r\n", elf_application_environment->install);
+	PRINTF("Remove function is %p\r\n", elf_application_environment->remove);
+	PRINTF("URLS Tree is %p\r\n", elf_application_environment->urls_tree);
+	PRINTF("Resources index is %p\r\n", elf_application_environment->resources_index);
 
-      printf("Resources index[0] %p\r\n", elf_application_environment->resources_index[0]);
-      printf("Resources index[1] %p\r\n", elf_application_environment->resources_index[1]);
-      printf("Resources index[2] %p\r\n", elf_application_environment->resources_index[2]);
-      printf("Resources index[3] %p\r\n", elf_application_environment->resources_index[3]);
+	PRINTF("Resources index[0] %p\r\n", elf_application_environment->resources_index[0]);
+	PRINTF("Resources index[1] %p\r\n", elf_application_environment->resources_index[1]);
+	PRINTF("Resources index[2] %p\r\n", elf_application_environment->resources_index[2]);
+	PRINTF("Resources index[3] %p\r\n", elf_application_environment->resources_index[3]);
 
-      if(!application_add(file->filename, file->size, data_address, data_size, elf_application_environment)) {
-	out_str("Failed to add application ");
+	/* The elf_application_enfironment is a pointer to a structure that is exported by the loaded elf file.
+	   This structure holds function pointers to install and remove function as well as pointers
+	   to the urls_tree parsing tree and resources_index array (the resources provided by the loaded elf file).
+	*/
+	if(!application_add(file->filename, file->size, data_address, data_size, elf_application_environment)) {
+	    out_str("Failed to add application ");
+	    out_str(file->filename);
+	    out_str(".");
+	    PRINTF("Failed to add application %s.\r\n", file->filename);
+	    clean_up(file);
+	    return 1;
+	} 
+
+	out_str("The file \"");
 	out_str(file->filename);
-        out_str(".");
-        printf("Failed to add application %s.\r\n", file->filename);
-	clean_up(file);
-        return 1;
-      } 
-
-      out_str("The file \"");
-      out_str(file->filename);
-      out_str("\" has been uploaded successfully (");
-      out_uint(file->size);
-      out_str(" bytes)\n");
+	out_str("\" has been uploaded successfully (");
+	out_uint(file->size);
+	out_str(" bytes)\n");
 
     } else {
 
-      if(loading < 0) {
-        out_str("An internal error happened\r\n");
-      } else {
-        out_str("An error happened while loading ");
-        out_str(file->filename);
-        out_str(" : ");
-        out_str(elf_loader_return_labels[loading]);
-      }
+	if(loading < 0) {
+	    out_str("An internal error happened\r\n");
+	} else {
+	    out_str("An error happened while loading ");
+	    out_str(file->filename);
+	    out_str(" : ");
+	    out_str(elf_loader_return_labels[loading]);
+	}
 
-      rfs_close(storage_handle);
-      clean_up(file);
+	rfs_close(storage_handle);
+	clean_up(file);
 
     }
-
-  } else
-    out_str("Please provide a file");
-
-  printf("%s OUT\r\n", __FUNCTION__);
-  return 1;
+    PRINTF("%s OUT\r\n", __FUNCTION__);
+    return 1;
 }
