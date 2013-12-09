@@ -33,7 +33,7 @@ const char *elf_loader_return_labels[] = {
 
 /* Flash temp buffer */
 #ifndef ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS
-#define ELF_ALLOCATOR_FLASH_STORAGE_SIZE (16*1024) /* The maximum elf size that smews will be able to load is 16kB */
+#define ELF_ALLOCATOR_FLASH_STORAGE_SIZE (3*4096) /* The maximum elf size that smews will be able to load is 16kB */
 const char allocator_flash_storage_space[ELF_ALLOCATOR_FLASH_STORAGE_SIZE] __attribute__ ((section(".flash_storage"))) = {0};
 #define ELF_ALLOCATOR_FLASH_STORAGE_ADDRESS (allocator_flash_storage_space)
 #endif

@@ -37,7 +37,7 @@
 /* FLASH */
 #ifndef ALLOCATOR_FLASH_ADDRESS
 /* Get the first available free space in eeprom to store the data */
-#define ALLOCATOR_FLASH_SIZE (32*1024)
+#define ALLOCATOR_FLASH_SIZE (11*4096)
 const char allocator_flash_space[ALLOCATOR_FLASH_SIZE] __attribute__ ((section(".flash_storage"))) = {0};
 #define ALLOCATOR_FLASH_ADDRESS (allocator_flash_space)
 #endif
