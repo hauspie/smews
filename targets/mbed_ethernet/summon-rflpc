@@ -5,10 +5,10 @@
 #
 # Author: Michael Hauspie <michael.hauspie@univ-lille1.fr>
 # Created:
-# Time-stamp: <2012-05-16 14:48:37 (hauspie)>
+# Time-stamp: <2013-12-19 16:13:27 (hauspie)>
 #
 RFLPC_REPOSITORY="http://github.com/hauspie/rflpc"
-RFLPC_RELEASE="v0.11"
+RFLPC_RELEASE="55231e48f8463199db269581724aa0e2c75d0e36"
 LOCAL_FOLDER="`cd \`dirname $0\` && pwd`"
 RFLPC_FOLDER=$LOCAL_FOLDER/rflpc
 RFLPC_CONFIG_FILE_SRC=$LOCAL_FOLDER/rflpc-config-file/config-options.h
@@ -63,7 +63,7 @@ function summon-git()
     	cd $RFLPC_FOLDER
 	fi	
 
-	git checkout -B $RFLPC_RELEASE >& /dev/null
+	git checkout $RFLPC_RELEASE >& /dev/null
 }
 
 if ! which git >& /dev/null
@@ -79,6 +79,7 @@ echo "Compiling library"
 # Creating config file
 cp $RFLPC_CONFIG_FILE_SRC $RFLPC_CONFIG_FOLDER
 # Compile
+make -C rflpc17xx clean >& $TMP_LOG_FILE
 if ! make -C rflpc17xx >& $TMP_LOG_FILE
 then
     cat $TMP_LOG_FILE 1>&2
