@@ -79,8 +79,10 @@ void flash_dump() {
 #endif
 /*-----------------------------------------------------------------------------*/
 static char initElfLoader() {
-  
   elf_applications_init(allocator_flash_alloc, NULL);
+#ifdef KERNEL_CONSOLE
+  allocator_add_console_handler();
+#endif
   return 1;
 }
 
@@ -125,7 +127,7 @@ static int flash_buffer_write_byte(uint8_t value)
     } 
     else 
     {
-	PRINTF("Writing buffer to flash offset %d\r\n", flash_buffer.flash_offset);
+        PRINTF("Writing buffer to flash offset %d\r\n", flash_buffer.flash_offset);
 	/* Commit buffer */
 	if(APPLICATION_WRITE(((uint8_t *)elf_allocator_storage) + flash_buffer.flash_offset, flash_buffer.storage_buffer, STORAGE_BUFFER_SIZE) != 0) {
 	    PRINTF("An error happened while flashing elf to storage\r\n");

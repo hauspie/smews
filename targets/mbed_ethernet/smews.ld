@@ -19,7 +19,7 @@
 
   Author: Michael Hauspie <Michael.Hauspie@univ-lille1.fr>
   Created: Nov. 12 2010
-  Time-stamp: <2013-12-09 16:28:38 (mickey)>
+  Time-stamp: <2013-12-20 15:31:07 (hauspie)>
 */
 
 /* output format of the file.
@@ -71,6 +71,7 @@ SECTIONS
    *(.persistent_data);
    _persistent_data_end = .;
 
+   . = ALIGN(0x1000);
    _text_start = .;
   *(.text*) ;
   /* Constant data is also put in flash */
