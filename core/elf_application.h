@@ -79,13 +79,13 @@ struct elf_application_t {
 };
 
 
-#define FOR_EACH_APPLICATION(item, code)			\
-    if(elf_application_get_count() > 0) {			\
-	struct elf_application_t *(item) = all_applications;	\
-	do {							\
-	    {code}						\
-	    (item) = (item)->next;				\
-	} while(item);						\
+#define FOR_EACH_APPLICATION(item, code)				\
+    if(elf_application_get_count() > 0) {				\
+	const struct elf_application_t *(item) = all_applications;	\
+	do {								\
+	    {code}							\
+	    (item) = (item)->next;					\
+	} while(item);							\
     }
 
 extern const struct elf_application_t const * all_applications;

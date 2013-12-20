@@ -7,21 +7,21 @@
 
 #include "../../core/elf_application.h"
 
-static CONST_VAR(unsigned char, fields_names[5][16]) = {
+static CONST_VAR(char, fields_names[5][16]) = {
 	{"name"},
 	{"size"},
 };
 
-static CONST_VAR(unsigned char, str0[]) = "[";
-static CONST_VAR(unsigned char, str1[]) = "{";
-static CONST_VAR(unsigned char, str2[]) = ":\"";
-static CONST_VAR(unsigned char, str3[]) = "\",";
-static CONST_VAR(unsigned char, str4[]) = "},";
-static CONST_VAR(unsigned char, str5[]) = "]";
+static CONST_VAR(char, str0[]) = "[";
+static CONST_VAR(char, str1[]) = "{";
+static CONST_VAR(char, str2[]) = ":\"";
+static CONST_VAR(char, str3[]) = "\",";
+static CONST_VAR(char, str4[]) = "},";
+static CONST_VAR(char, str5[]) = "]";
 
-static void out_const_str(const unsigned char /*CONST_VAR*/ *str) {
-	const unsigned char *c = str;
-	unsigned char tmp;
+static void out_const_str(const char /*CONST_VAR*/ *str) {
+	const char *c = str;
+	char tmp;
 	while((tmp = CONST_READ_UI8(c++))!='\0'){
 		out_c(tmp);
 	}
