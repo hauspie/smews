@@ -25,29 +25,35 @@ void elf_applications_init(elf_application_allocate_t allocate, elf_application_
 int elf_application_get_count() { return elf_applications_count; }
 
 
+#define APP_WRITE(var,val) do {						\
+	struct elf_application *b = (val);				\
+	APPLICATION_WRITE(&(var), &b, sizeof(struct elf_application_t *)); \
+    } while (0)
+
+/* First question: why use a linked list stored in flash oO ?
+   My 2 cent: a simple static array may be a better/simpler idea, even if less flexible
+*/
+
 char elf_application_add(struct elf_application_t *application) {
   struct elf_application_parsing_t *parsing;
   /* Head insert */
-  struct elf_application_t *buf[1];
   unsigned int i;
   const struct output_handler_t * /*CONST_VAR*/ output_handler;
 
   /*application->previous = NULL; */
-  buf[0] = NULL;
-  APPLICATION_WRITE(&application->previous, buf, sizeof(struct elf_application_t *));
+  APP_WRITE(application->previous, NULL);
 
   if(all_applications == NULL) {
     /* application->next = NULL; */
-    APPLICATION_WRITE(&application->next, buf, sizeof(struct elf_application_t *));
+      APP_WRITE(application->next, NULL);
   } else {
-    /* application->next          = all_applications; */
-    APPLICATION_WRITE(&application->next, &all_applications, sizeof(struct elf_application_t *));
-    /* all_applications->previous = application; */
-    APPLICATION_WRITE(&all_applications->previous, application, sizeof(struct elf_application_t *));
+      /* application->next          = all_applications; */
+      APP_WRITE(application->next, all_applications);
+      /* all_applications->previous = application; */
+      APP_WRITE(all_applications->previous, application);
   }
-
   /* all_applications             = application; */
-  APPLICATION_WRITE(&all_applications, &application, sizeof(struct elf_application_t *));
+  APP_WRITE(all_applications, application);
 
   {
     unsigned int elfApplicationsCount = elf_applications_count + 1;

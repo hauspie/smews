@@ -30,7 +30,6 @@
 #ifndef _ELFLOADER_DEBUG_H_
 #define _ELFLOADER_DEBUG_H_
 
-
 #ifdef DEBUG
 int printf(const char *,...);
 #define PRINTF(...) printf(__VA_ARGS__)

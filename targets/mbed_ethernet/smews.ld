@@ -19,7 +19,7 @@
 
   Author: Michael Hauspie <Michael.Hauspie@univ-lille1.fr>
   Created: Nov. 12 2010
-  Time-stamp: <2013-12-06 14:19:41 (hauspie)>
+  Time-stamp: <2013-12-09 16:28:38 (mickey)>
 */
 
 /* output format of the file.
@@ -67,13 +67,14 @@ SECTIONS
   . =  0x1000;
   *(.flash_storage); /* This can be used to put arrays in flash in 4k pages,
    which are easier to user than 32k pages */
-
-  *(.text*) ;
-  /* Constant data is also put in flash */
-  *(.rodata*) ;
    _persistent_data_start = .;
    *(.persistent_data);
    _persistent_data_end = .;
+
+   _text_start = .;
+  *(.text*) ;
+  /* Constant data is also put in flash */
+  *(.rodata*) ;
   } 
   /* this declares a global constant which contains the address of the end of section text.
      This will be used by the startup code to copy data from flash to ram */

@@ -172,7 +172,7 @@ if dynApp :
 	genObjects.append(env.Object(elfEnvironmentO, elfEnvironmentC))
 
 	linkerCommand = env.subst('$LINK')
-	linkerCommand += ' -r '
+	linkerCommand += ' -r -nostdlib '
 
 	pathes = []
 	for elt in genObjects :
