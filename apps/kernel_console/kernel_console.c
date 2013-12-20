@@ -35,7 +35,7 @@
 /*
   Author: Michael Hauspie <michael.hauspie@univ-lille1.fr>
   Created: 2011-09-29
-  Time-stamp: <2012-10-02 10:11:46 (hauspie)>
+  Time-stamp: <2013-12-20 10:24:00 (hauspie)>
 */
 
 /*
@@ -99,8 +99,6 @@ static char kernel_console_init()
 }
 
 
-extern struct output_handler_t * resources_index[];
-/*extern CONST_VAR(const struct output_handler_t *, resources_index[]);*/
 extern CONST_VAR(unsigned char, urls_tree[]);
 void kernel_console_ressource_index(const char *args)
 {
