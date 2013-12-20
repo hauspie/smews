@@ -268,7 +268,6 @@ const struct output_handler_t *url_parse_step(uint8_t byte, unsigned char **url_
   
     if(blob_curr >= 128) {
 	if (byte == ' ') {
-	    printf("======> OUTPUT HANDLER FOUND %p %d<=====\r\n", CONST_ADDR(resources_index[blob_curr - 128]), blob_curr - 128); 
 	    return (struct output_handler_t*)CONST_ADDR(resources_index[blob_curr - 128]);
 	}
     
