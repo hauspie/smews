@@ -248,12 +248,12 @@ char out_c (char c)
 /*-----------------------------------------------------------------------------------*/
 void smews_send_packet (struct connection *connection)
 {
-    uint32_t index_in_file;
+    uint32_t index_in_file = 0;
     uint16_t segment_length;
     unsigned char *ip_addr;
-    unsigned char *port;
-    unsigned char *next_outseqno;
-    unsigned char *current_inseqno;
+    unsigned char *port = NULL;
+    unsigned char *next_outseqno = NULL;
+    unsigned char *current_inseqno = NULL;
     const struct output_handler_t * /*CONST_VAR */ output_handler;
     enum handler_type_e handler_type;
     /* buffer used to store the current content-length */
@@ -329,6 +329,8 @@ void smews_send_packet (struct connection *connection)
 	    segment_length = curr_output.content_length - TCP_HEADER_SIZE;
 	    break;
 #endif
+	default:
+	    return; /* bad handler type, return */
     }
 
     DEV_PREPARE_OUTPUT (segment_length + IP_HEADER_SIZE + TCP_HEADER_SIZE);
@@ -600,9 +602,7 @@ void smews_send_packet (struct connection *connection)
 	case type_file:
 	{
 	    /* Send the payload of the packet */
-	    const char *tmpptr =
-		(const char *) (CONST_ADDR (GET_FILE (output_handler).data) +
-				index_in_file);
+	    const char *tmpptr =(const char *) (CONST_ADDR (GET_FILE (output_handler).data) + index_in_file);
 	    DEV_PUTN_CONST (tmpptr, segment_length);
 	    break;
 	}

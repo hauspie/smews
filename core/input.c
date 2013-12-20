@@ -676,13 +676,13 @@ char smews_receive(void) {
     x = 0;
     if(segment_length && tmp_connection.protocol.http.tcp_state == tcp_established && (new_tcp_data || tmp_connection.output_handler == NULL)) {
         const struct output_handler_t * /*CONST_VAR*/ output_handler = NULL;
-	struct output_handler_t * elf_application_output_handler     = NULL;
+	const struct output_handler_t * elf_application_output_handler     = NULL;
         /* parse the eventual GET request */
         unsigned const char * /*CONST_VAR*/ blob;
         unsigned char blob_curr;
 #ifndef DISABLE_ARGS
         struct arg_ref_t tmp_arg_ref = {0,0,0};
-        uint16_t tmp_args_size_ref;
+        uint16_t tmp_args_size_ref=0;
 #endif
 
         if(tmp_connection.protocol.http.parsing_state == parsing_out) {
@@ -998,7 +998,7 @@ char smews_receive(void) {
                                 tmp_connection.protocol.http.post_data->filename[1] = tmp_connection.protocol.http.post_data->filename[1] + 10;
                             }
                             /* add current character */
-                            tmp_connection.protocol.http.post_data->filename[tmp_connection.protocol.http.post_data->filename[0]] = tmp_char;
+                            tmp_connection.protocol.http.post_data->filename[(int)(tmp_connection.protocol.http.post_data->filename[0])] = tmp_char;
                             tmp_connection.protocol.http.post_data->filename[0]++;
                         }
                     }
